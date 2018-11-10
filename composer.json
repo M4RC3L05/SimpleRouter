@@ -2,6 +2,9 @@
     "version": "0.0.1",
     "name": "m4rc3l05/SimpleRouter",
     "description": "Simple router for php",
+    "require": {
+        "php": "^5.3.3 || ^7.0"
+    },
     "keywords": [
         "php",
         "router"
