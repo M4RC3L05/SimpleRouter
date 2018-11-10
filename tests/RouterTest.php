@@ -102,4 +102,37 @@ class RouterTest extends TestCase
 
         $this->assertEquals("startmiddlewareget", $tmp);
     }
+
+    public function test_it_should_match_routes_with_params_and_return_them_as_response_params()
+    {
+        $tmp = "";
+        $router = new Router();
+
+        $router->get("/user/:id", function ($req, $res) use (&$tmp) {
+            $tmp .= $req->params["id"];
+        });
+
+        $router->get("/user/:id/prodile/:profid", function ($req, $res) use (&$tmp) {
+            $tmp .= $req->params["id"];
+            $tmp .= $req->params["profid"];
+        });
+
+        $router->get("/user/:id/prodile/:profid/comment/:comid", function ($req, $res) use (&$tmp) {
+            $tmp .= $req->params["id"];
+            $tmp .= $req->params["profid"];
+            $tmp .= $req->params["comid"];
+        });
+
+        $router->match("", "get", "/user/123");
+        $this->assertEquals("123", $tmp);
+        $tmp = "";
+
+        $router->match("", "get", "/user/123/prodile/111");
+        $this->assertEquals("123111", $tmp);
+        $tmp = "";
+
+        $router->match("", "get", "/user/123/prodile/111/comment/321");
+        $this->assertEquals("123111321", $tmp);
+        $tmp = "";
+    }
 }

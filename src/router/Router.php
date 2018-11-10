@@ -100,7 +100,7 @@ class Router
 
             if (!\preg_match_all($regexPath, \explode("?", $path)[0], $finalParamsMatches)) continue;
 
-            $finalParamsMatches = \array_splice($finalParamsMatches, 1);
+            $finalParamsMatches = Helpers::arrayFlat(\array_splice($finalParamsMatches, 1));
 
             if (\count($finalParamsMatches) > 0 && isset($matchesToRouteParams[1]) && \count($matchesToRouteParams) > 0) {
                 $finalParamsMatches = \array_combine($matchesToRouteParams[1], $finalParamsMatches);
@@ -109,7 +109,7 @@ class Router
             $handlersForMatchRoute = \array_values($pathwithhandler)[0];
             $handlersWithMiddlewares = \array_merge($this->_middlewares[Router::GLOBAL_MIDDLEWARES], $handlersForMatchRoute);
 
-            return Helpers::routerPipe($handlersWithMiddlewares, new Request(), new Response($this->_viewsDir));
+            return Helpers::routerPipe($handlersWithMiddlewares, new Request($finalParamsMatches), new Response($this->_viewsDir));
         }
 
         $handlersForMatchRoute = $this->_routes[Router::GET_ROUTE][$this->_404Path];
@@ -165,4 +165,3 @@ class Router
         $this->_viewsDir = $viewsDir;
     }
 }
- 

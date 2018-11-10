@@ -53,4 +53,11 @@ class HelpersTest extends TestCase
         Helpers::routerPipe($handlers, new Request(), new Response(""));
         $this->assertEquals("12", $a);
     }
+
+    public function test_it_shound_flattern_multi_array()
+    {
+        $arr = Helpers::arrayFlat([1, [1], [[1], [[1]]], ["33"]]);
+
+        $this->assertEquals([1, 1, 1, 1, "33"], $arr);
+    }
 }

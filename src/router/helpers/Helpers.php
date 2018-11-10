@@ -56,4 +56,14 @@ class Helpers
 
         return $properHandler($request, $response, $next);
     }
+
+    public static function arrayFlat(array $array) : array
+    {
+        $tmp = [];
+        array_walk_recursive($array, function ($v) use (&$tmp) {
+            $tmp[] = $v;
+        });
+
+        return $tmp;
+    }
 }
