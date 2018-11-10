@@ -2,6 +2,11 @@
 
 namespace SimpleRouter\Router\Helpers;
 
+use SimpleRouter\Router\Types\IResponse;
+use SimpleRouter\Router\Response;
+use SimpleRouter\Router\Request;
+
+
 class Helpers
 {
     private static function getProperHandler($handler)
@@ -15,12 +20,12 @@ class Helpers
         } else if ($handler instanceof \Closure || \function_exists($handler)) {
             return $handler;
         } else {
-            return null;
+            return;
         }
     }
 
 
-    public static function routerPipe($handlers, $request, $response)
+    public static function routerPipe(array $handlers, Request $request, Response $response)
     {
 
         if (\count($handlers) <= 0) return;
@@ -39,11 +44,11 @@ class Helpers
 
         $properHandler = Helpers::getProperHandler($now);
 
-        if (!isset($properHandler) || \is_null($properHandler)) return;
+        if (!isset($properHandler) || \is_null($properHandler)) return void;
 
         $next = function ($err = null) use ($handlers, $request, $response) {
             if (isset($err) && !is_null($err)) {
-                throw new Exception($err, 1);
+                throw new \Exception($err, 1);
             } else {
                 return Helpers::routerPipe($handlers, $request, $response);
             }

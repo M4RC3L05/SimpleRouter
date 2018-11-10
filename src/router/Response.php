@@ -2,21 +2,26 @@
 
 namespace SimpleRouter\Router;
 
+use SimpleRouter\Router\Helpers\Helpers;
+
+
 class Response
 {
     private $_viewsDir;
+    private $_widthData;
 
     public function __construct(string $viewsDir)
     {
         $this->_viewsDir = $viewsDir;
     }
-    public function status($code)
+
+    public function status(int $code) : Response
     {
         http_response_code($code);
         return $this;
     }
 
-    public function sendFile($path, bool $forceDownlod = false)
+    public function sendFile(string $path, bool $forceDownlod = false) : void
     {
         if (!\file_exists($path)) die();
 
@@ -38,44 +43,78 @@ class Response
         die();
     }
 
-    public function redirect($to, $permanent = true)
+    public function redirect(string $to, bool $permanent = true) : void
     {
         header('Location: ' . $to, true, $permanent ? 301 : 302);
         die();
     }
 
-    public function json($data)
+    public function json($data) : void
     {
         \header('Content-Type: application/json;charset=UTF-8');
         echo json_encode($data);
         die();
     }
 
-    public function sendString(string $data)
+    public function sendString(string $data) : void
     {
         \header('Content-Type: plain/text;charset=UTF-8');
         echo $data;
         die();
     }
 
-    public function sendHtml(string $data)
+    public function sendHtml(string $data) : void
     {
-        \header('Content-Type: text/html; charset=UTF-8');
+        \header('Content-Type: text/html;charset=UTF-8');
         echo $data;
         die();
     }
 
-    public function view(string $viewName, $data = [])
+    public function view(string $viewName) : void
     {
         $splitViewName = \explode(".", $viewName);
 
-        if (!isset($this->_viewsDir)) throw new Exception("No views directory provided", 1);
+        if (!isset($this->_viewsDir)) throw new \Exception("No views directory provided", 1);
 
-        if (!\is_dir($this->_viewsDir . \DIRECTORY_SEPARATOR . $splitViewName[0])) throw new Exception("No view found.", 1);
+        if (!\is_dir($this->_viewsDir . \DIRECTORY_SEPARATOR . $splitViewName[0])) throw new \Exception("No view found.", 1);
 
-        if (!\is_file($this->_viewsDir . \DIRECTORY_SEPARATOR . $splitViewName[0] . \DIRECTORY_SEPARATOR . $splitViewName[1] . ".view.php")) throw new Exception("No view found.", 1);
+        if (!\is_file($this->_viewsDir . \DIRECTORY_SEPARATOR . $splitViewName[0] . \DIRECTORY_SEPARATOR . $splitViewName[1] . ".view.php")) throw new \Exception("No view found.", 1);
 
-        require_once $this->_viewsDir . \DIRECTORY_SEPARATOR . $splitViewName[0] . \DIRECTORY_SEPARATOR . $splitViewName[1] . ".view.php";
-        die();
+        \Closure::bind(function ($data, $renderViewsDir, $splitViewName) {
+
+            $strRequire = $renderViewsDir . \DIRECTORY_SEPARATOR . $splitViewName[0] . \DIRECTORY_SEPARATOR . $splitViewName[1] . ".view.php";
+
+            unset($renderViewsDir);
+            unset($splitViewName);
+
+            require $strRequire;
+
+            die();
+        }, null)($this->_widthData, $this->_viewsDir, $splitViewName);
+
+    }
+
+    public function withHeaders(array $headers) : Response
+    {
+        foreach ($headers as $key => $value) {
+            \header("{$key}:{$value}");
+        }
+
+        return $this;
+    }
+
+    public function withViewData(array $data) : Response
+    {
+        $this->_widthData = $data;
+        return $this;
+    }
+
+    public function withCookies(array $data) : Response
+    {
+        foreach ($data as $key => $cookie) {
+            \setcookie($cookie["name"], $cookie["value"] ?? null, $cookie["expires"] ?? null, $cookie["path"] ?? null, $cookie["domain"] ?? null, $cookie["secure"] ?? null, $cookie["httponly"] ?? null);
+        }
+
+        return $this;
     }
 }

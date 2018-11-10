@@ -2,52 +2,57 @@
 
 namespace SimpleRouter\Router;
 
-use SimpleRouter\Router\Helpers\Helpers;
 use SimpleRouter\Router\Response;
-
+use SimpleRouter\Router\Helpers\Helpers;
+use SimpleRouter\Router\Types\IResponse;
 
 class Router
 {
     private $_routes;
     private $_middlewares;
     private $_viewsDir;
+    private $_404Path = "/notfound";
 
+    private const NOT_FOUND_ROUTE = "NOT_FOUND_ROUTE";
     private const GET_ROUTE = "GET";
     private const POST_ROUTE = "POST";
     private const PUT_ROUTE = "PUT";
     private const PATCH_ROUTE = "PATCH";
     private const DELETE_ROUTE = "DELETE";
-    private const NOT_FOUND = "404";
     private const GLOBAL_MIDDLEWARES = "GLOBAL_MIDDLEWARES";
 
-    public function __construct(string $viewsDir)
+    public function __construct()
     {
         $this->_routes = [];
         $this->_middlewares = [];
-        $this->_viewsDir = $viewsDir;
+        $this->_viewsDir = "";
         $this->_setUp();
     }
 
     private function _setUp()
     {
-        $this->_routes[Router::NOT_FOUND] = function () {
-            echo "Not Found.";
-        };
+        $this->notFound($this->_404Path, function ($req, Response $res) {
+            return $res->status(404)->sendHtml("Not found");
+        });
 
         $this->_middlewares[Router::GLOBAL_MIDDLEWARES] = [];
     }
 
     private function _isRouterType(string $type)
     {
-        $tmpIs = false;
+        switch ($type) {
+            case Router::GET_ROUTE:
+            case Router::POST_ROUTE:
+            case Router::GET_ROUTE:
+            case Router::PUT_ROUTE:
+            case Router::PATCH_ROUTE:
+            case Router::DELETE_ROUTE:
+            case Router::NOT_FOUND_ROUTE:
+                return true;
 
-        if ($type === Router::GET_ROUTE) $tmpIs = true;
-
-        if ($type !== Router::POST_ROUTE) $tmpIs = true;
-
-        if ($type !== Router::NOT_FOUND) $tmpIs = true;
-
-        return $tmpIs;
+            default:
+                return false;
+        }
     }
 
     private function _innerRegisterRoute(string $type, string $route, $handlers)
@@ -55,8 +60,10 @@ class Router
 
         if (!$this->_isRouterType($type)) return;
 
-        if ($type === Router::NOT_FOUND) {
-            $this->_routes[$type] = $handlers;
+        if ($type === Router::NOT_FOUND_ROUTE) {
+            unset($this->_routes[Router::GET_ROUTE][$this->_404Path]);
+            $this->_404Path = $route;
+            $this->_routes[Router::GET_ROUTE][$this->_404Path] = $handlers;
             return;
         }
 
@@ -70,7 +77,7 @@ class Router
     {
         $method = \strtoupper($method);
 
-        if (!\array_key_exists($method, $this->_routes) || !isset($this->_routes[$method])) return $this->_routes[Router::NOT_FOUND]();
+        if (!$this->_isRouterType($method) || !\array_key_exists($method, $this->_routes) || !isset($this->_routes[$method])) return $this->_routes[Router::NOT_FOUND]();
 
         $routesForMethod = $this->_routes[$method];
 
@@ -101,10 +108,13 @@ class Router
 
             $handlersForMatchRoute = \array_values($pathwithhandler)[0];
             $handlersWithMiddlewares = \array_merge($this->_middlewares[Router::GLOBAL_MIDDLEWARES], $handlersForMatchRoute);
+
             return Helpers::routerPipe($handlersWithMiddlewares, new Request(), new Response($this->_viewsDir));
         }
 
-        $handlersWithMiddlewares = \array_merge_recursive($this->_middlewares[Router::GLOBAL_MIDDLEWARES], $this->_routes[Router::NOT_FOUND]);
+        $handlersForMatchRoute = $this->_routes[Router::GET_ROUTE][$this->_404Path];
+        $handlersWithMiddlewares = \array_merge($this->_middlewares[Router::GLOBAL_MIDDLEWARES], $handlersForMatchRoute);
+
         return Helpers::routerPipe($handlersWithMiddlewares, new Request(), new Response($this->_viewsDir));
     }
 
@@ -138,14 +148,21 @@ class Router
         $this->_innerRegisterRoute(Router::DELETE_ROUTE, $route, $handlers);
     }
 
-    public function NotFound(...$handlers)
+    public function notFound(string $route, ...$handlers)
     {
-        $this->_innerRegisterRoute(Router::NOT_FOUND, "", $handlers);
+        $this->_innerRegisterRoute(Router::NOT_FOUND_ROUTE, $route, $handlers);
     }
 
     public function match(string $hostname, string $method, string $path)
     {
         return $this->_innerMath($hostname, $method, $path);
+    }
+
+    public function registerView(string $viewsDir) : void
+    {
+        if (!\is_dir($viewsDir)) return;
+
+        $this->_viewsDir = $viewsDir;
     }
 }
  
