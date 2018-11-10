@@ -9,7 +9,7 @@ use SimpleRouter\Router\Request;
 
 class Helpers
 {
-    private static function getProperHandler($handler)
+    private static function _getProperHandler($handler)
     {
         if (\is_array($handler) or ($handler instanceof Traversable)) {
             $class = $handler[0];
@@ -31,7 +31,7 @@ class Helpers
         if (\count($handlers) <= 0) return;
 
         if (\count($handlers) === 1) {
-            $properHandler = Helpers::getProperHandler($handlers[0]);
+            $properHandler = Helpers::_getProperHandler($handlers[0]);
             if (isset($properHandler) && !\is_null($properHandler)) {
                 return $properHandler($request, $response, function () {
                 });
@@ -42,9 +42,9 @@ class Helpers
 
         $now = array_shift($handlers);
 
-        $properHandler = Helpers::getProperHandler($now);
+        $properHandler = Helpers::_getProperHandler($now);
 
-        if (!isset($properHandler) || \is_null($properHandler)) return void;
+        if (!isset($properHandler) || \is_null($properHandler)) return;
 
         $next = function ($err = null) use ($handlers, $request, $response) {
             if (isset($err) && !is_null($err)) {

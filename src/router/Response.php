@@ -53,21 +53,18 @@ class Response
     {
         \header('Content-Type: application/json;charset=UTF-8');
         echo json_encode($data);
-        die();
     }
 
     public function sendString(string $data) : void
     {
         \header('Content-Type: plain/text;charset=UTF-8');
         echo $data;
-        die();
     }
 
     public function sendHtml(string $data) : void
     {
         \header('Content-Type: text/html;charset=UTF-8');
         echo $data;
-        die();
     }
 
     public function view(string $viewName) : void
@@ -89,7 +86,6 @@ class Response
 
             require $strRequire;
 
-            die();
         }, null)($this->_widthData, $this->_viewsDir, $splitViewName);
 
     }

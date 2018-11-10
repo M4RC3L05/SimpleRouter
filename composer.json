@@ -21,5 +21,14 @@
         "psr-4": {
             "SimpleRouter\\": "src"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "SimpleRouter\\": "src",
+            "Tests\\": "tests"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7"
     }
 }
