@@ -1,0 +1,21 @@
+{
+    "name": "m4rc3l05/SimpleRouter",
+    "description": "Simple router for php",
+    "keywords": [
+        "php",
+        "router"
+    ],
+    "homepage": "https://github.com/M4RC3L05/SimpleRouter",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "João Baptista",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "SimpleRouter\\": "src"
+        }
+    }
+}
