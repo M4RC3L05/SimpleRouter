@@ -1,0 +1,19 @@
+language: php
+
+os:
+    - linux
+    - osx
+
+php:
+    - '5.4'
+    - '5.6'
+    - '7.0'
+    - '7.1'
+    - '7.2'
+
+script:
+    - ./vendor/bin/phpunit tests --verbose --colors --process-isolation
+
+branches:
+    except:
+        - gh-pages
