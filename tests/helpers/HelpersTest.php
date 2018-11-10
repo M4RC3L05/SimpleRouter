@@ -1,10 +1,10 @@
 <?php
 namespace Tests\Helpers;
 
-use \PHPUnit\Framework\TestCase;
-use \SimpleRouter\Router\Helpers\Helpers;
-use \SimpleRouter\Router\Request;
-use \SimpleRouter\Router\Response;
+use PHPUnit\Framework\TestCase;
+use SimpleRouter\Router\Helpers\Helpers;
+use SimpleRouter\Router\Request;
+use SimpleRouter\Router\Response;
 
 class HelpersTest extends TestCase
 {

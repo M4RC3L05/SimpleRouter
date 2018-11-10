@@ -2,8 +2,8 @@
 
 namespace Tests;
 
-use \PHPUnit\Framework\TestCase;
-use \SimpleRouter\Router\Router;
+use PHPUnit\Framework\TestCase;
+use SimpleRouter\Router\Router;
 
 
 class RouterTest extends TestCase

@@ -3,9 +3,8 @@
 namespace Tests;
 
 
-
-use \PHPUnit\Framework\TestCase;
-use \SimpleRouter\Router\Request;
+use PHPUnit\Framework\TestCase;
+use SimpleRouter\Router\Request;
 
 class RequestTest extends TestCase
 {
