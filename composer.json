@@ -1,6 +1,6 @@
 {
     "version": "0.0.1",
-    "name": "m4rc3l05/SimpleRouter",
+    "name": "m4rc3l05/simplerouter",
     "description": "Simple router for php",
     "require": {
         "php": "^5.3.3 || ^7.0"
