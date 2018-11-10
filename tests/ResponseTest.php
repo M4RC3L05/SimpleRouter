@@ -2,8 +2,8 @@
 
 namespace Tests;
 
-use PHPUnit\Framework\TestCase;
-use SimpleRouter\Router\Response;
+use \PHPUnit\Framework\TestCase;
+use \SimpleRouter\Router\Response;
 
 
 class ResponseTest extends TestCase
