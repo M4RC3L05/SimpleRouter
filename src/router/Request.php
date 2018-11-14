@@ -13,32 +13,15 @@ class Request
     public $server;
     public $cookies;
 
-    public function __construct(array $params = [])
+    public function __construct(array $params = [], SessionManager $session)
     {
         $this->params = isset($params) ? $params : [];
         $this->query = isset($_GET) ? $_GET : [];
         $this->body = isset($_POST) ? $_POST : [];
         $this->files = isset($_FILES) ? $_FILES : [];
-        $this->session = isset($_SESSION) ? $_SESSION : [];
+        $this->session = $session;
         $this->request = isset($_REQUEST) ? $_REQUEST : [];
         $this->server = isset($_SERVER) ? $_SERVER : [];
         $this->cookies = isset($_COOKIE) ? $_COOKIE : [];
-    }
-
-    public function setSession($key, $value)
-    {
-        if (!isset($_SESSION)) return;
-
-        $_SESSION[$key] = $value;
-        $this->session = $_SESSION;
-    }
-
-    public function removeFromSession($key)
-    {
-        if (!isset($_SESSION)) return;
-        if (!\array_key_exists($key, $_SESSION) || !\array_key_exists($key, $this->session)) return;
-
-        unset($_SESSION[$key]);
-        $this->session = $_SESSION;
     }
 }

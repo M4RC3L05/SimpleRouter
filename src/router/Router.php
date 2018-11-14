@@ -12,6 +12,7 @@ class Router
     private $_middlewares;
     private $_viewsDir;
     private $_404Path = "/notfound";
+    private $_sessionManager;
 
     private const NOT_FOUND_ROUTE = "NOT_FOUND_ROUTE";
     private const GET_ROUTE = "GET";
@@ -26,6 +27,7 @@ class Router
         $this->_routes = [];
         $this->_middlewares = [];
         $this->_viewsDir = "";
+        $this->_sessionManager = new SessionManager();
         $this->_setUp();
     }
 
@@ -108,14 +110,13 @@ class Router
 
             $handlersForMatchRoute = \array_values($pathwithhandler)[0];
             $handlersWithMiddlewares = \array_merge($this->_middlewares[Router::GLOBAL_MIDDLEWARES], $handlersForMatchRoute);
-
-            return Helpers::routerPipe($handlersWithMiddlewares, new Request($finalParamsMatches), new Response($this->_viewsDir));
+            return Helpers::routerPipe($handlersWithMiddlewares, new Request($finalParamsMatches, $this->_sessionManager), new Response($this->_viewsDir));
         }
 
         $handlersForMatchRoute = $this->_routes[Router::GET_ROUTE][$this->_404Path];
         $handlersWithMiddlewares = \array_merge($this->_middlewares[Router::GLOBAL_MIDDLEWARES], $handlersForMatchRoute);
 
-        return Helpers::routerPipe($handlersWithMiddlewares, new Request(), new Response($this->_viewsDir));
+        return Helpers::routerPipe($handlersWithMiddlewares, new Request([], $this->_sessionManager), new Response($this->_viewsDir));
     }
 
     public function use($middleware)
