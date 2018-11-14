@@ -1,5 +1,4 @@
 <?php
-
 namespace Tests;
 
 use PHPUnit\Framework\TestCase;
@@ -8,6 +7,7 @@ use SimpleRouter\Router\Router;
 
 class RouterTest extends TestCase
 {
+
     public function test_it_should_create_a_router()
     {
         try {
@@ -55,17 +55,6 @@ class RouterTest extends TestCase
     public function test_it_should_display_not_found_path_if_path_not_exists()
     {
         $tmp = "";
-
-        $router = new Router();
-        $router->get("/ola", function ($req, $res) use (&$tmp) {
-            $tmp .= "get";
-        });
-
-        \ob_start();
-        $router->match("app.com", "get", "app.com/sds");
-        $notfound = \ob_get_clean();
-
-        $this->assertEquals("Not found", $notfound);
 
         $router = new Router();
         $router->get("/ola", function ($req, $res) use (&$tmp) {
