@@ -5,6 +5,7 @@ use PHPUnit\Framework\TestCase;
 use SimpleRouter\Router\Helpers\Helpers;
 use SimpleRouter\Router\Request;
 use SimpleRouter\Router\Response;
+use SimpleRouter\Router\SessionManager;
 
 class HelpersTest extends TestCase
 {
@@ -27,7 +28,8 @@ class HelpersTest extends TestCase
             }
         ];
 
-        Helpers::routerPipe($handlers, new Request(), new Response(""));
+        $sessionHandlerSpy = $this->createMock(SessionManager::class);
+        Helpers::routerPipe($handlers, new Request([], $sessionHandlerSpy), new Response(""));
         $this->assertEquals("123", $a);
     }
 
@@ -50,7 +52,8 @@ class HelpersTest extends TestCase
             }
         ];
 
-        Helpers::routerPipe($handlers, new Request(), new Response(""));
+        $sessionHandlerSpy = $this->createMock(SessionManager::class);
+        Helpers::routerPipe($handlers, new Request([], $sessionHandlerSpy), new Response(""));
         $this->assertEquals("12", $a);
     }
 

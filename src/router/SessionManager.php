@@ -14,7 +14,6 @@ class SessionManager
     public function init() : void
     {
         if (!$this->is_session_started()) {
-            session_set_cookie_params(0);
             session_start();
         }
     }
@@ -34,7 +33,7 @@ class SessionManager
         if (!isset($_SESSION)) return;
 
         if ($prefix) {
-            if (!\array_key_exists($this->PREFIX . $key, $_SESSION)) return;
+            if (!\array_key_exists(SessionManager::PREFIX . $key, $_SESSION)) return;
             unset($_SESSION[SessionManager::PREFIX . $key]);
         } else {
             if (!\array_key_exists($key, $_SESSION)) return;
@@ -47,8 +46,9 @@ class SessionManager
         if (!$this->is_session_started()) return;
         if (!isset($_SESSION)) return;
 
-        if ($prefix) return $_SESSION[SessionManager::PREFIX . $key];
-        else return $_SESSION[$key];
+        if ($prefix && \array_key_exists(SessionManager::PREFIX . $key, $_SESSION)) return $_SESSION[SessionManager::PREFIX . $key];
+        else if (!$prefix && \array_key_exists($key, $_SESSION)) return $_SESSION[$key];
+        else return null;
     }
 
     public function destroyByPrefix() : void
@@ -58,11 +58,12 @@ class SessionManager
 
         foreach ($_SESSION as $key => $value) {
             $explodekey = \explode("@@", $key);
+
             if (\count($explodekey) <= 1) continue;
 
-            if ($explodekey[0] !== $this->PREFIX) continue;
+            if ($explodekey[0] . "@@" !== SessionManager::PREFIX) continue;
 
-            unset($_SESSION[SessionManager::PREFIX . $key]);
+            unset($_SESSION[$key]);
         }
     }
 
@@ -108,14 +109,11 @@ class SessionManager
 
     private function is_session_started() : bool
     {
-        if (php_sapi_name() !== 'cli') {
-            if (version_compare(phpversion(), '5.4.0', '>=')) {
-                return session_status() === PHP_SESSION_ACTIVE ? true : false;
-            } else {
-                return session_id() === '' ? false : true;
-            }
+        if (version_compare(phpversion(), '5.4.0', '>=')) {
+            return session_status() === PHP_SESSION_ACTIVE ? true : false;
+        } else {
+            return session_id() === '' ? false : true;
         }
-        return false;
     }
 
 }
