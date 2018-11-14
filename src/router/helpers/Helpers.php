@@ -2,7 +2,6 @@
 
 namespace SimpleRouter\Router\Helpers;
 
-use SimpleRouter\Router\Types\IResponse;
 use SimpleRouter\Router\Response;
 use SimpleRouter\Router\Request;
 

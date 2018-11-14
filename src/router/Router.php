@@ -31,7 +31,7 @@ class Router
 
     private function _setUp()
     {
-        $this->notFound($this->_404Path, function ($req, Response $res) {
+        $this->notFound($this->_404Path, function (Request $req, Response $res) {
             return $res->status(404)->sendHtml("Not found");
         });
 
