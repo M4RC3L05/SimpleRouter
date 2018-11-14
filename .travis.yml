@@ -1,0 +1,12 @@
+language: php
+
+os:
+    - linux
+    - osx
+
+php:
+    - 7.1
+    - 7.0
+    - 7.2
+
+script: phpunit tests
