@@ -3,7 +3,8 @@
     "name": "m4rc3l05/simplerouter",
     "description": "Simple router for php",
     "require": {
-        "php": "^7.1"
+        "php": "^7.1",
+        "ralouphie/getallheaders": "^2.0"
     },
     "keywords": [
         "php",
@@ -20,12 +21,6 @@
     "autoload": {
         "psr-4": {
             "SimpleRouter\\": "src"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "SimpleRouter\\": "src",
-            "Tests\\": "tests"
         }
     },
     "require-dev": {
