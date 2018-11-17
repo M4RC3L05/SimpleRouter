@@ -2,6 +2,9 @@
     "version": "0.2.2",
     "name": "m4rc3l05/simplerouter",
     "description": "Simple router for php",
+    "scripts": {
+        "test": "phpunit"
+    },
     "require": {
         "php": "^7.1",
         "ralouphie/getallheaders": "^2.0"
