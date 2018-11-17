@@ -3,6 +3,9 @@
     processIsolation="true"
     colors="true"
     verbose="true"
+    convertErrorsToExceptions="true"
+	convertNoticesToExceptions="true"
+	convertWarningsToExceptions="true"
 >
     <testsuites>
         <testsuite name="Router Tests">
