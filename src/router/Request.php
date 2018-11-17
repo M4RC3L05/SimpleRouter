@@ -10,8 +10,9 @@ class Request
     public $files;
     public $request;
     public $session;
-    public $server;
     public $cookies;
+    public $headers;
+    public $method;
 
     public function __construct(array $params = [], SessionManager $session)
     {
@@ -21,7 +22,8 @@ class Request
         $this->files = isset($_FILES) ? $_FILES : [];
         $this->session = $session;
         $this->request = isset($_REQUEST) ? $_REQUEST : [];
-        $this->server = isset($_SERVER) ? $_SERVER : [];
         $this->cookies = isset($_COOKIE) ? $_COOKIE : [];
+        $this->headers = getallheaders() ?? [];
+        $this->method = $_SERVER["REQUEST_METHOD"] ?? "";
     }
 }
