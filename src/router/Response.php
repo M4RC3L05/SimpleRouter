@@ -40,31 +40,34 @@ class Response
         ob_clean();
         flush();
         \readfile($path);
-        die();
+        $this->end();
     }
 
     public function redirect(string $to, bool $permanent = true) : void
     {
         header('Location: ' . $to, true, $permanent ? 301 : 302);
-        die();
+        $this->end();
     }
 
     public function json($data) : void
     {
         \header('Content-Type: application/json;charset=UTF-8');
         echo json_encode($data);
+        $this->end();
     }
 
     public function sendString(string $data) : void
     {
         \header('Content-Type: plain/text;charset=UTF-8');
         echo $data;
+        $this->end();
     }
 
     public function sendHtml(string $data) : void
     {
         \header('Content-Type: text/html;charset=UTF-8');
         echo $data;
+        $this->end();
     }
 
     public function view(string $viewName) : void
@@ -87,7 +90,7 @@ class Response
             require $strRequire;
 
         }, null)($this->_widthData, $this->_viewsDir, $splitViewName);
-
+        $this->end();
     }
 
     public function withHeaders(array $headers) : Response
