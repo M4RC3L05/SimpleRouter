@@ -79,11 +79,21 @@ class Router
     {
         $method = \strtoupper($method);
 
-        if (!$this->_isRouterType($method) || !\array_key_exists($method, $this->_routes) || !isset($this->_routes[$method])) return $this->_routes[Router::NOT_FOUND]();
+        if (!$this->_isRouterType($method) || !\array_key_exists($method, $this->_routes) || !isset($this->_routes[$method])) {
+            $handlersForMatchRoute = $this->_routes[Router::GET_ROUTE][$this->_404Path];
+            $handlersWithMiddlewares = \array_merge($this->_middlewares[Router::GLOBAL_MIDDLEWARES], $handlersForMatchRoute);
+
+            return Helpers::routerPipe($handlersWithMiddlewares, new Request([], $this->_sessionManager), new Response($this->_viewsDir));
+        }
 
         $routesForMethod = $this->_routes[$method];
 
-        if ($routesForMethod == null || \count($routesForMethod) <= 0) return $this->_routes[Router::NOT_FOUND]();
+        if ($routesForMethod == null || \count($routesForMethod) <= 0) {
+            $handlersForMatchRoute = $this->_routes[Router::GET_ROUTE][$this->_404Path];
+            $handlersWithMiddlewares = \array_merge($this->_middlewares[Router::GLOBAL_MIDDLEWARES], $handlersForMatchRoute);
+
+            return Helpers::routerPipe($handlersWithMiddlewares, new Request([], $this->_sessionManager), new Response($this->_viewsDir));
+        }
 
         foreach ($routesForMethod as $keyIndexRoute => $pathwithhandler) {
             $innerPath = \array_keys($pathwithhandler)[0];
@@ -112,11 +122,6 @@ class Router
             $handlersWithMiddlewares = \array_merge($this->_middlewares[Router::GLOBAL_MIDDLEWARES], $handlersForMatchRoute);
             return Helpers::routerPipe($handlersWithMiddlewares, new Request($finalParamsMatches, $this->_sessionManager), new Response($this->_viewsDir));
         }
-
-        $handlersForMatchRoute = $this->_routes[Router::GET_ROUTE][$this->_404Path];
-        $handlersWithMiddlewares = \array_merge($this->_middlewares[Router::GLOBAL_MIDDLEWARES], $handlersForMatchRoute);
-
-        return Helpers::routerPipe($handlersWithMiddlewares, new Request([], $this->_sessionManager), new Response($this->_viewsDir));
     }
 
     public function use($middleware)

@@ -113,4 +113,9 @@ class Response
 
         return $this;
     }
+
+    public function end() : void
+    {
+        die();
+    }
 }
