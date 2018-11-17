@@ -88,7 +88,7 @@ class Router
 
         $routesForMethod = $this->_routes[$method];
 
-        if ($routesForMethod == null || \count($routesForMethod) <= 0) {
+        if ($routesForMethod === null || \count($routesForMethod) <= 0) {
             $handlersForMatchRoute = $this->_routes[Router::GET_ROUTE][$this->_404Path];
             $handlersWithMiddlewares = \array_merge($this->_middlewares[Router::GLOBAL_MIDDLEWARES], $handlersForMatchRoute);
 
@@ -122,6 +122,11 @@ class Router
             $handlersWithMiddlewares = \array_merge($this->_middlewares[Router::GLOBAL_MIDDLEWARES], $handlersForMatchRoute);
             return Helpers::routerPipe($handlersWithMiddlewares, new Request($finalParamsMatches, $this->_sessionManager), new Response($this->_viewsDir));
         }
+
+        $handlersForMatchRoute = $this->_routes[Router::GET_ROUTE][$this->_404Path];
+        $handlersWithMiddlewares = \array_merge($this->_middlewares[Router::GLOBAL_MIDDLEWARES], $handlersForMatchRoute);
+
+        return Helpers::routerPipe($handlersWithMiddlewares, new Request([], $this->_sessionManager), new Response($this->_viewsDir));
     }
 
     public function use($middleware)
