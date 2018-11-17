@@ -9,10 +9,11 @@ use SimpleRouter\Router\Types\IResponse;
 class Router
 {
     private $_routes;
-    private $_middlewares;
     private $_viewsDir;
     private $_404Path = "/notfound";
     private $_sessionManager;
+    private $_hostname;
+    private $_basePath;
 
     private const NOT_FOUND_ROUTE = "NOT_FOUND_ROUTE";
     private const GET_ROUTE = "GET";
@@ -21,26 +22,30 @@ class Router
     private const PATCH_ROUTE = "PATCH";
     private const DELETE_ROUTE = "DELETE";
     private const GLOBAL_MIDDLEWARES = "GLOBAL_MIDDLEWARES";
+    private const GROUP_ROUTES = "GROUP_ROUTES";
 
-    public function __construct()
+    public function __construct(string $hostname = null, string $basePath = "")
     {
+        $this->_hostname = $hostname ?? $_SERVER["HTTP_HOST"];
+        $this->_basePath = "";
         $this->_routes = [];
         $this->_middlewares = [];
         $this->_viewsDir = "";
         $this->_sessionManager = new SessionManager();
+        $this->_basePath = $basePath;
         $this->_setUp();
     }
 
-    private function _setUp()
+    private function _setUp() : void
     {
         $this->notFound($this->_404Path, function (Request $req, Response $res) {
             return $res->status(404)->sendHtml("Not found");
         });
 
-        $this->_middlewares[Router::GLOBAL_MIDDLEWARES] = [];
+        $this->_routes[Router::GLOBAL_MIDDLEWARES] = [];
     }
 
-    private function _isRouterType(string $type)
+    private function _isRouterType(string $type) : bool
     {
         switch ($type) {
             case Router::GET_ROUTE:
@@ -50,6 +55,8 @@ class Router
             case Router::PATCH_ROUTE:
             case Router::DELETE_ROUTE:
             case Router::NOT_FOUND_ROUTE:
+            case Router::GLOBAL_MIDDLEWARES:
+            case Router::GROUP_ROUTES:
                 return true;
 
             default:
@@ -57,9 +64,8 @@ class Router
         }
     }
 
-    private function _innerRegisterRoute(string $type, string $route, $handlers)
+    private function _innerRegisterRoute(string $type, string $route, $handlers) : void
     {
-
         if (!$this->_isRouterType($type)) return;
 
         if ($type === Router::NOT_FOUND_ROUTE) {
@@ -69,10 +75,21 @@ class Router
             return;
         }
 
+        if ($type === Router::GLOBAL_MIDDLEWARES || $type == Router::GROUP_ROUTES) {
+            if (!\array_key_exists($type, $this->_routes) || !isset($this->_routes[$type]))
+                $this->_routes[$type] = [];
+
+            foreach ($handlers as $key => $value) {
+                \array_push($this->_routes[$type], $value);
+            }
+
+            return;
+        }
+
         if (!\array_key_exists($type, $this->_routes) || !isset($this->_routes[$type]))
             $this->_routes[$type] = [];
 
-        \array_push($this->_routes[$type], [$route => $handlers]);
+        \array_push($this->_routes[$type], [$this->_basePath . $route => $handlers]);
     }
 
     private function _innerMath(string $hostname, string $method, string $path)
@@ -81,7 +98,7 @@ class Router
 
         if (!$this->_isRouterType($method) || !\array_key_exists($method, $this->_routes) || !isset($this->_routes[$method])) {
             $handlersForMatchRoute = $this->_routes[Router::GET_ROUTE][$this->_404Path];
-            $handlersWithMiddlewares = \array_merge($this->_middlewares[Router::GLOBAL_MIDDLEWARES], $handlersForMatchRoute);
+            $handlersWithMiddlewares = \array_merge($this->_routes[Router::GLOBAL_MIDDLEWARES], $handlersForMatchRoute);
 
             return Helpers::routerPipe($handlersWithMiddlewares, new Request([], $this->_sessionManager), new Response($this->_viewsDir));
         }
@@ -90,7 +107,7 @@ class Router
 
         if ($routesForMethod === null || \count($routesForMethod) <= 0) {
             $handlersForMatchRoute = $this->_routes[Router::GET_ROUTE][$this->_404Path];
-            $handlersWithMiddlewares = \array_merge($this->_middlewares[Router::GLOBAL_MIDDLEWARES], $handlersForMatchRoute);
+            $handlersWithMiddlewares = \array_merge($this->_routes[Router::GLOBAL_MIDDLEWARES], $handlersForMatchRoute);
 
             return Helpers::routerPipe($handlersWithMiddlewares, new Request([], $this->_sessionManager), new Response($this->_viewsDir));
         }
@@ -119,54 +136,65 @@ class Router
             }
 
             $handlersForMatchRoute = \array_values($pathwithhandler)[0];
-            $handlersWithMiddlewares = \array_merge($this->_middlewares[Router::GLOBAL_MIDDLEWARES], $handlersForMatchRoute);
+            $handlersWithMiddlewares = \array_merge($this->_routes[Router::GLOBAL_MIDDLEWARES], $handlersForMatchRoute);
             return Helpers::routerPipe($handlersWithMiddlewares, new Request($finalParamsMatches, $this->_sessionManager), new Response($this->_viewsDir));
         }
 
+        if (isset($this->_routes[Router::GROUP_ROUTES]) && \count($this->_routes[Router::GROUP_ROUTES]) > 0) {
+            foreach ($this->_routes[Router::GROUP_ROUTES] as $rKey => $group) {
+                return $group->match($_SERVER['REQUEST_METHOD'], $_SERVER["REQUEST_URI"]);
+            }
+        }
+
         $handlersForMatchRoute = $this->_routes[Router::GET_ROUTE][$this->_404Path];
-        $handlersWithMiddlewares = \array_merge($this->_middlewares[Router::GLOBAL_MIDDLEWARES], $handlersForMatchRoute);
+        $handlersWithMiddlewares = \array_merge($this->_routes[Router::GLOBAL_MIDDLEWARES], $handlersForMatchRoute);
 
         return Helpers::routerPipe($handlersWithMiddlewares, new Request([], $this->_sessionManager), new Response($this->_viewsDir));
     }
 
-    public function use($middleware)
+    public function use(...$middleware) : void
     {
-        \array_push($this->_middlewares[Router::GLOBAL_MIDDLEWARES], $middleware);
+        $this->_innerRegisterRoute(Router::GLOBAL_MIDDLEWARES, "", $middleware);
     }
 
-    public function get(string $route, ...$handlers)
+    public function group(...$routers) : void
+    {
+        $this->_innerRegisterRoute(Router::GROUP_ROUTES, "", $routers);
+    }
+
+    public function get(string $route, ...$handlers) : void
     {
         $this->_innerRegisterRoute(Router::GET_ROUTE, $route, $handlers);
     }
 
-    public function post(string $route, ...$handlers)
+    public function post(string $route, ...$handlers) : void
     {
         $this->_innerRegisterRoute(Router::POST_ROUTE, $route, $handlers);
     }
 
-    public function put(string $route, ...$handlers)
+    public function put(string $route, ...$handlers) : void
     {
         $this->_innerRegisterRoute(Router::PUT_ROUTE, $route, $handlers);
     }
 
-    public function patch(string $route, ...$handlers)
+    public function patch(string $route, ...$handlers) : void
     {
         $this->_innerRegisterRoute(Router::PATCH_ROUTE, $route, $handlers);
     }
 
-    public function delete(string $route, ...$handlers)
+    public function delete(string $route, ...$handlers) : void
     {
         $this->_innerRegisterRoute(Router::DELETE_ROUTE, $route, $handlers);
     }
 
-    public function notFound(string $route, ...$handlers)
+    public function notFound(string $route, ...$handlers) : void
     {
         $this->_innerRegisterRoute(Router::NOT_FOUND_ROUTE, $route, $handlers);
     }
 
-    public function match(string $hostname, string $method, string $path)
+    public function match(string $method, string $path)
     {
-        return $this->_innerMath($hostname, $method, $path);
+        return $this->_innerMath($this->_hostname, $method, $this->_hostname . $path);
     }
 
     public function registerView(string $viewsDir) : void

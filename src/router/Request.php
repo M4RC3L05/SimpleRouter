@@ -13,6 +13,7 @@ class Request
     public $cookies;
     public $headers;
     public $method;
+    public $server;
 
     public function __construct(array $params = [], SessionManager $session)
     {
@@ -25,5 +26,6 @@ class Request
         $this->cookies = isset($_COOKIE) ? $_COOKIE : [];
         $this->headers = getallheaders() ?? [];
         $this->method = $_SERVER["REQUEST_METHOD"] ?? "";
+        $this->server = isset($_SERVER) ? $_SERVER : [];
     }
 }
