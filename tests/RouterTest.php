@@ -2,7 +2,6 @@
 namespace Tests;
 
 use PHPUnit\Framework\TestCase;
-use SimpleRouter\Router\Router;
 
 
 class RouterTest extends TestCase
@@ -11,7 +10,7 @@ class RouterTest extends TestCase
     public function test_it_should_create_a_router()
     {
         try {
-            $router = new Router();
+            $router = new \SimpleRouter\Router\Router();
             $this->assertTrue(true);
         } catch (\Exception $e) {
             $this->assertTrue(false);
@@ -22,7 +21,7 @@ class RouterTest extends TestCase
     {
         $tmp = "";
 
-        $router = new Router();
+        $router = new \SimpleRouter\Router\Router();
         $router->get("/get", function ($req, $res) use (&$tmp) {
             $tmp .= "get";
         });
@@ -56,7 +55,7 @@ class RouterTest extends TestCase
     {
         $tmp = "";
 
-        $router = new Router();
+        $router = new \SimpleRouter\Router\Router();
         $router->get("/ola", function ($req, $res) use (&$tmp) {
             $tmp .= "get";
         });
@@ -73,7 +72,7 @@ class RouterTest extends TestCase
     {
         $tmp = "";
 
-        $router = new Router();
+        $router = new \SimpleRouter\Router\Router();
         $router->get("/ola", function ($req, $res, $next) use (&$tmp) {
             $tmp .= "middleware";
 
@@ -95,7 +94,7 @@ class RouterTest extends TestCase
     public function test_it_should_match_routes_with_params_and_return_them_as_response_params()
     {
         $tmp = "";
-        $router = new Router();
+        $router = new \SimpleRouter\Router\Router();
 
         $router->get("/user/:id", function ($req, $res) use (&$tmp) {
             $tmp .= $req->params["id"];
