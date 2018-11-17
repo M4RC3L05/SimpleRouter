@@ -40,7 +40,6 @@ class Response
         ob_clean();
         flush();
         \readfile($path);
-        $this->end();
     }
 
     public function redirect(string $to, bool $permanent = true) : void
@@ -53,21 +52,18 @@ class Response
     {
         \header('Content-Type: application/json;charset=UTF-8');
         echo json_encode($data);
-        $this->end();
     }
 
     public function sendString(string $data) : void
     {
         \header('Content-Type: plain/text;charset=UTF-8');
         echo $data;
-        $this->end();
     }
 
     public function sendHtml(string $data) : void
     {
         \header('Content-Type: text/html;charset=UTF-8');
         echo $data;
-        $this->end();
     }
 
     public function view(string $viewName) : void

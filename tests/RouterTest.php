@@ -2,6 +2,7 @@
 namespace Tests;
 
 use PHPUnit\Framework\TestCase;
+use SimpleRouter\Router\Router;
 
 
 class RouterTest extends TestCase
@@ -10,7 +11,7 @@ class RouterTest extends TestCase
     public function test_it_should_create_a_router()
     {
         try {
-            $router = new \SimpleRouter\Router\Router();
+            $router = new Router();
             $this->assertTrue(true);
         } catch (\Exception $e) {
             $this->assertTrue(false);
@@ -21,7 +22,7 @@ class RouterTest extends TestCase
     {
         $tmp = "";
 
-        $router = new \SimpleRouter\Router\Router();
+        $router = new Router("app.com");
         $router->get("/get", function ($req, $res) use (&$tmp) {
             $tmp .= "get";
         });
@@ -42,11 +43,11 @@ class RouterTest extends TestCase
             $tmp .= "delete";
         });
 
-        $router->match("app.com", "get", "app.com/get");
-        $router->match("app.com", "post", "app.com/post");
-        $router->match("app.com", "put", "app.com/put");
-        $router->match("app.com", "patch", "app.com/patch");
-        $router->match("app.com", "DELETE", "app.com/delete");
+        $router->match("get", "/get");
+        $router->match("post", "/post");
+        $router->match("put", "/put");
+        $router->match("patch", "/patch");
+        $router->match("DELETE", "/delete");
 
         $this->assertEquals("getpostputpatchdelete", $tmp);
     }
@@ -55,7 +56,7 @@ class RouterTest extends TestCase
     {
         $tmp = "";
 
-        $router = new \SimpleRouter\Router\Router();
+        $router = new Router("app.com");
         $router->get("/ola", function ($req, $res) use (&$tmp) {
             $tmp .= "get";
         });
@@ -64,7 +65,7 @@ class RouterTest extends TestCase
             $tmp .= "notfound";
         });
 
-        $router->match("app.com", "get", "app.com/sds");
+        $router->match("get", "/sds");
         $this->assertEquals("notfound", $tmp);
     }
 
@@ -72,7 +73,7 @@ class RouterTest extends TestCase
     {
         $tmp = "";
 
-        $router = new \SimpleRouter\Router\Router();
+        $router = new Router("app.com");
         $router->get("/ola", function ($req, $res, $next) use (&$tmp) {
             $tmp .= "middleware";
 
@@ -86,7 +87,7 @@ class RouterTest extends TestCase
             $next();
         });
 
-        $router->match("app.com", "get", "app.com/ola");
+        $router->match("get", "/ola");
 
         $this->assertEquals("startmiddlewareget", $tmp);
     }
@@ -94,7 +95,7 @@ class RouterTest extends TestCase
     public function test_it_should_match_routes_with_params_and_return_them_as_response_params()
     {
         $tmp = "";
-        $router = new \SimpleRouter\Router\Router();
+        $router = new Router("app.com");
 
         $router->get("/user/:id", function ($req, $res) use (&$tmp) {
             $tmp .= $req->params["id"];
@@ -111,16 +112,55 @@ class RouterTest extends TestCase
             $tmp .= $req->params["comid"];
         });
 
-        $router->match("", "get", "/user/123");
+        $router->match("get", "/user/123");
         $this->assertEquals("123", $tmp);
         $tmp = "";
 
-        $router->match("", "get", "/user/123/prodile/111");
+        $router->match("get", "/user/123/prodile/111");
         $this->assertEquals("123111", $tmp);
         $tmp = "";
 
-        $router->match("", "get", "/user/123/prodile/111/comment/321");
+        $router->match("get", "/user/123/prodile/111/comment/321");
         $this->assertEquals("123111321", $tmp);
         $tmp = "";
+    }
+
+    public function test_it_should_create_groups_routes()
+    {
+        $tmp = "";
+        $router = new Router("app.com");
+        $router2 = new Router("app.com");
+        $router3 = new Router("app.com");
+
+        $router
+            ->get("/user/:id", function ($req, $res) use (&$tmp) {
+                $tmp .= "/user/:id";
+            })
+            ->group(
+                "/b/:aaa",
+                $router2
+                    ->on("/b/:aaa")
+                    ->get("/a", function ($req, $res) use (&$tmp) {
+                        $tmp .= "/b/:aaa/a";
+                    })
+                    ->get("/", function ($req, $res) use (&$tmp) {
+                        $tmp .= "/b/:aaa";
+                    })
+                    ->group(
+                        "/aa",
+                        $router3
+                            ->on("/b/:aaa")
+                            ->get("/:vvv", function ($req, $res) use (&$tmp) {
+                                $tmp .= "/b/:aaa/:vvv";
+                            })
+                    )
+            );
+
+        $router->match("get", "/user/111");
+        $router->match("get", "/b/abc");
+        $router->match("get", "/b/abc/a");
+        $router->match("get", "/b/ccc/c");
+        // $router->match("get", "/user/111");
+        $this->assertEquals("/user/:id/b/:aaa/b/:aaa/a/b/:aaa/:vvv", $tmp);
     }
 }
