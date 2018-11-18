@@ -63,4 +63,28 @@ class HelpersTest extends TestCase
 
         $this->assertEquals([1, 1, 1, 1, "33"], $arr);
     }
+
+    public function test_it_should_memoise()
+    {
+
+        $times = 0;
+        $a = new class
+        {
+            public function sum($a, $b)
+            {
+                return $a + $b;
+            }
+        };
+
+
+        $sumMem = Helpers::memoise(function (...$params) use ($a, &$times) {
+            $times += 1;
+            return $a->sum(...$params);
+        });
+
+        $sumMem(1, 2);
+        $sumMem(1, 2);
+
+        $this->assertEquals(1, $times);
+    }
 }

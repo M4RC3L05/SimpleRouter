@@ -127,40 +127,52 @@ class RouterTest extends TestCase
 
     public function test_it_should_create_groups_routes()
     {
-        $tmp = "";
+
         $router = new Router("app.com");
-        $router2 = new Router("app.com");
-        $router3 = new Router("app.com");
+
 
         $router
             ->get("/user/:id", function ($req, $res) use (&$tmp) {
-                $tmp .= "/user/:id";
+                \print_r("/user/:id");
             })
             ->group(
                 "/b/:aaa",
-                $router2
-                    ->on("/b/:aaa")
-                    ->get("/a", function ($req, $res) use (&$tmp) {
-                        $tmp .= "/b/:aaa/a";
-                    })
-                    ->get("/", function ($req, $res) use (&$tmp) {
-                        $tmp .= "/b/:aaa";
-                    })
-                    ->group(
-                        "/aa",
-                        $router3
-                            ->on("/b/:aaa")
-                            ->get("/:vvv", function ($req, $res) use (&$tmp) {
-                                $tmp .= "/b/:aaa/:vvv";
-                            })
-                    )
+                function ($r) {
+                    $r
+                        ->get("/", function ($req, $res) use (&$tmp) {
+                            \print_r("/b/:aaa");
+                        })
+                        ->get("/a", function ($req, $res) use (&$tmp) {
+                            \print_r("/b/:aaa/a");
+                        })
+                        ->group(
+                            "/aa",
+                            function ($r) {
+                                $r
+                                    ->use(function ($req, $res, $next) {
+                                        \print_r("mid for /b/:aaa/aa");
+                                        $next();
+                                    })
+                                    ->get(
+                                        "/:vvv",
+                                        function ($req, $res) use (&$tmp) {
+                                            \print_r("/b/:aaa/aa/:vvv");
+                                        }
+                                    );
+                            }
+
+                        );
+                }
             );
 
+
+
+        \ob_start();
         $router->match("get", "/user/111");
         $router->match("get", "/b/abc");
         $router->match("get", "/b/abc/a");
-        $router->match("get", "/b/ccc/c");
-        // $router->match("get", "/user/111");
-        $this->assertEquals("/user/:id/b/:aaa/b/:aaa/a/b/:aaa/:vvv", $tmp);
+        $router->match("get", "/b/ccc/aa/ggg");
+        $tmp = \ob_get_clean();
+        $this->assertEquals("/user/:id/b/:aaa/b/:aaa/amid for /b/:aaa/aa/b/:aaa/aa/:vvv", $tmp);
     }
 }

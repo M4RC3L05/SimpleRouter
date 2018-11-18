@@ -74,7 +74,6 @@ class Helpers
             $args = \implode("", func_get_args());
 
             if (\array_key_exists($args, $memo)) {
-                echo "incach";
                 return $memo[$args];
             }
 
