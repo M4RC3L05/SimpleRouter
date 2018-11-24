@@ -66,7 +66,7 @@ class Response
         echo $data;
     }
 
-    public function view(string $viewName) : void
+    public function view(string $viewName)
     {
         $splitViewName = \explode(".", $viewName);
 
@@ -75,18 +75,13 @@ class Response
         if (!\is_dir($this->_viewsDir . \DIRECTORY_SEPARATOR . $splitViewName[0])) throw new \Exception("No view found.", 1);
 
         if (!\is_file($this->_viewsDir . \DIRECTORY_SEPARATOR . $splitViewName[0] . \DIRECTORY_SEPARATOR . $splitViewName[1] . ".view.php")) throw new \Exception("No view found.", 1);
+        $strRequire = $this->_viewsDir . \DIRECTORY_SEPARATOR . $splitViewName[0] . \DIRECTORY_SEPARATOR . $splitViewName[1] . ".view.php";
 
-        \Closure::bind(function ($data, $renderViewsDir, $splitViewName) {
-
-            $strRequire = $renderViewsDir . \DIRECTORY_SEPARATOR . $splitViewName[0] . \DIRECTORY_SEPARATOR . $splitViewName[1] . ".view.php";
-
-            unset($renderViewsDir);
-            unset($splitViewName);
-
-            require $strRequire;
-
-        }, null)($this->_widthData, $this->_viewsDir, $splitViewName);
-        $this->end();
+        \extract($this->_widthData);
+        \ob_start();
+        require($strRequire);
+        $content = \ob_get_clean();
+        return $this->sendHtml($content);
     }
 
     public function withHeaders(array $headers) : Response

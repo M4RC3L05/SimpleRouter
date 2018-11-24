@@ -111,18 +111,9 @@ class Router
 
         foreach (self::$_middlewares as $p => $handlers) {
 
-            if ($p === "/") {
-
-                for ($i = 0; $i < count($handlers); $i++) {
-                    \array_push($allMiddlewares, $handlers[$i]);
-                }
-
-                continue;
-            }
-
             $matchesToRouteParams = [];
             $pathParams = \preg_match_all("/\:([0-9]+|[a-zA-z_@]+|[0-9a-zA-z_@]+)/m", $p, $matchesToRouteParams);
-            $regexPath = "/^" . \preg_replace("/\//", "\/", $p) . "/m";
+            $regexPath = "/^" . \preg_replace("/\//", "\/", $p) . ($p === "/" ? "" : "\/") . "/m";
 
             if (isset($matchesToRouteParams[0]) && \count($matchesToRouteParams[0]) > 0) {
 
@@ -131,7 +122,7 @@ class Router
                 }
             }
 
-            if (!\preg_match_all($regexPath, $path)) continue;
+            if (!\preg_match_all($regexPath, $path . "/")) continue;
 
             for ($i = 0; $i < count($handlers); $i++) {
                 \array_push($allMiddlewares, $handlers[$i]);
