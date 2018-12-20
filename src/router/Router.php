@@ -105,9 +105,7 @@ class Router
         if (!\array_key_exists($finalPath, $this->_routes[$type]) || !isset($this->_routes[$type][$finalPath]))
             $this->_routes[$type][$finalPath] = [];
 
-        foreach ($handlers as $key => $value) {
-            \array_push($this->_routes[$type][$finalPath], $value);
-        }
+        $this->_routes[$type][$finalPath] = $handlers;
 
     }
 
