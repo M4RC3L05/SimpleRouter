@@ -192,6 +192,7 @@ class Router
             return Helpers::routerPipe($handlersWithMiddlewares, new Request($finalParamsMatches, self::$_sessionManager), new Response($this->_viewsDir));
         }
 
+        $matchPath = \explode("?", $path)[0];
         $allMiddlewares = $this->_memoiseAllMiddlewaresForRoute->call(new class
         {
         }, $matchPath);
@@ -266,7 +267,7 @@ class Router
         $this->_innerMath($this->_hostname, $method, $path);
     }
 
-    public function registerView(string $viewsDir) : void
+    public function registerViews(string $viewsDir) : void
     {
         if (!\is_dir($viewsDir)) return;
 
