@@ -145,8 +145,8 @@ class Router
         if (!$this->_isRouterType($method) || !\array_key_exists($method, $this->_routes) || !isset($this->_routes[$method])) {
             $allMiddlewares = $this->_memoiseAllMiddlewaresForRoute->call(new class
             {
-            }, "/");
-            $handlersForMatchRoute = $this->_routes[Router::GET_ROUTE][$this->_404Path];
+            }, $path);
+            $handlersForMatchRoute = $this->_routes[Router::NOT_FOUND_ROUTE];
             $handlersWithMiddlewares = \array_merge($allMiddlewares ?? [], $handlersForMatchRoute);
 
             return Helpers::routerPipe($handlersWithMiddlewares, new Request([], self::$_sessionManager), new Response($this->_viewsDir));
@@ -155,12 +155,13 @@ class Router
         $routesForMethod = $this->_routes[$method];
 
         if ($routesForMethod === null || \count($routesForMethod) <= 0) {
-
-            $handlersForMatchRoute = $this->_routes[Router::GET_ROUTE][$this->_404Path];
-            $handlersWithMiddlewares = \array_merge(self::$_middlewares["/"] ?? [], $handlersForMatchRoute);
+            $allMiddlewares = $this->_memoiseAllMiddlewaresForRoute->call(new class
+            {
+            }, $path);
+            $handlersForMatchRoute = $this->_routes[Router::NOT_FOUND_ROUTE];
+            $handlersWithMiddlewares = \array_merge($allMiddlewares ?? [], $handlersForMatchRoute);
 
             return Helpers::routerPipe($handlersWithMiddlewares, new Request([], self::$_sessionManager), new Response($this->_viewsDir));
-
         }
 
         foreach ($routesForMethod as $keyIndexRoute => $pathwithhandler) {
