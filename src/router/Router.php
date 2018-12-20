@@ -17,7 +17,6 @@ class Router
     private $_basePath;
     private $_memoiseAllMiddlewaresForRoute;
 
-    // private const NOT_FOUND_ROUTE = "NOT_FOUND_ROUTE";
     private const ALL_ROUTE = "ALL_ROUTE";
     private const GET_ROUTE = "GET";
     private const POST_ROUTE = "POST";
@@ -25,7 +24,7 @@ class Router
     private const PATCH_ROUTE = "PATCH";
     private const DELETE_ROUTE = "DELETE";
     private const GLOBAL_MIDDLEWARES = "GLOBAL_MIDDLEWARES";
-    private const GROUP_ROUTES = "GROUP_ROUTES";
+    private const NOT_FOUND_ROUTE = "404_ROUTE";
 
     public function __construct(string $hostname = null, string $basePath = "/")
     {
@@ -39,7 +38,7 @@ class Router
             return $this->_allMiddlewaresForRoute(...$params);
         });
 
-        $this->notFound("/notFound", function ($req, $res) {
+        $this->notFound(function ($req, $res) {
             return $res->status(404)->sendHtml("<p>Not found</p>");
         });
     }
@@ -76,6 +75,14 @@ class Router
                 \array_push(self::$_middlewares[$this->_basePath], $value);
             }
 
+            return;
+        }
+
+        if ($type === Router::NOT_FOUND_ROUTE) {
+            if (!\array_key_exists($type, $this->_routes) || !isset($this->_routes[$type]))
+                $this->_routes[$type] = [];
+
+            $this->_routes[$type] = $handlers;
             return;
         }
 
@@ -196,7 +203,7 @@ class Router
         $allMiddlewares = $this->_memoiseAllMiddlewaresForRoute->call(new class
         {
         }, $matchPath);
-        $handlersForMatchRoute = $this->_routes[Router::GET_ROUTE][$this->_404Path];
+        $handlersForMatchRoute = $this->_routes[Router::NOT_FOUND_ROUTE];
         $handlersWithMiddlewares = \array_merge($allMiddlewares ?? [], $handlersForMatchRoute);
         return Helpers::routerPipe($handlersWithMiddlewares, new Request([], self::$_sessionManager), new Response($this->_viewsDir));
     }
@@ -253,12 +260,10 @@ class Router
         return $this;
     }
 
-    public function notFound(string $route, ...$handlers) : Router
+    public function notFound(...$handlers) : Router
     {
         if ($this->_basePath !== "/") return $this;
-        unset($this->_routes[Router::GET_ROUTE][$this->_404Path]);
-        $this->_innerRegisterRoute(Router::GET_ROUTE, $route, $handlers);
-        $this->_404Path = $route;
+        $this->_innerRegisterRoute(Router::NOT_FOUND_ROUTE, "", $handlers);
         return $this;
     }
 

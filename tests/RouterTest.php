@@ -61,7 +61,7 @@ class RouterTest extends TestCase
             $tmp .= "get";
         });
 
-        $router->notFound("/404", function ($req, $res) use (&$tmp) {
+        $router->notFound(function ($req, $res) use (&$tmp) {
             $tmp .= "notfound";
         });
 

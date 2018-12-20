@@ -42,7 +42,7 @@ A simple router for php
         })
 
         // Custom 404 handler
-        ->notFound("/404", function (Request $request, Response $response) {
+        ->notFound(function (Request $request, Response $response) {
             return $response->status(404)->sendHtml("404, Not found!");
         })
         ->group("/g", function (Router $r) {
