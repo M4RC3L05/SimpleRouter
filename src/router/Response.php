@@ -31,12 +31,12 @@ class Response
         $contentDisposition = $forceDownlod ? 'attachment' : 'inline';
         $basename = basename($path);
         $filesize = filesize($path);
-        header("Content-Type: {$mimetype}");
-        header("Content-Disposition: {$contentDisposition}; filename={$basename}");
-        header("Content-Length: {$filesize}");
-        header("Expires: 0");
-        header('Cache-Control: must-revalidate ');
-        header('Pragma: public');
+        \header("Content-Type: {$mimetype}");
+        \header("Content-Disposition: {$contentDisposition}; filename={$basename}");
+        \header("Content-Length: {$filesize}");
+        \header("Expires: 0");
+        \header('Cache-Control: must-revalidate ');
+        \header('Pragma: public');
         ob_clean();
         flush();
         \readfile($path);
@@ -44,7 +44,7 @@ class Response
 
     public function redirect(string $to, bool $permanent = true) : void
     {
-        header('Location: ' . $to, true, $permanent ? 301 : 302);
+        \header('Location: ' . $to, true, $permanent ? 301 : 302);
         $this->end();
     }
 
