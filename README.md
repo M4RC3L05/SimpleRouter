@@ -6,7 +6,7 @@ A simple router for php
 
 1. Instal via composer
 
-    ```console
+    ```bash
         $ composer require m4rc3l05/simplerouter
     ```
 
