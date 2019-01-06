@@ -110,9 +110,9 @@ class SessionManager
     private function is_session_started() : bool
     {
         if (version_compare(phpversion(), '5.4.0', '>=')) {
-            return session_status() === PHP_SESSION_ACTIVE ? true : false;
+            return session_status() === PHP_SESSION_ACTIVE;
         } else {
-            return session_id() === '' ? false : true;
+            return session_id() === '';
         }
     }
 
