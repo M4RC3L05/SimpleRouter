@@ -2,8 +2,6 @@
 
 namespace SimpleRouter\Router;
 
-use SimpleRouter\Router\Helpers\Helpers;
-
 
 class Response
 {

@@ -3,8 +3,10 @@
 namespace SimpleRouter\Router;
 
 use SimpleRouter\Router\Response;
-use SimpleRouter\Router\Helpers\Helpers;
+use SimpleRouter\Router\Helpers\RouterH;
 use SimpleRouter\Router\Types\IResponse;
+use SimpleRouter\Router\Helpers\ArraysH;
+use SimpleRouter\Router\Helpers\FPH;
 
 class Router
 {
@@ -34,7 +36,7 @@ class Router
         $this->_viewsDir = "";
         self::$_sessionManager = new SessionManager();
         $this->_basePath = $basePath;
-        $this->_memoiseAllMiddlewaresForRoute = Helpers::memoise(function (...$params) {
+        $this->_memoiseAllMiddlewaresForRoute = FPH::memoise(function (...$params) {
             return $this->_allMiddlewaresForRoute(...$params);
         });
 
@@ -149,7 +151,7 @@ class Router
             $handlersForMatchRoute = $this->_routes[Router::NOT_FOUND_ROUTE];
             $handlersWithMiddlewares = \array_merge($allMiddlewares ?? [], $handlersForMatchRoute);
 
-            return Helpers::routerPipe($handlersWithMiddlewares, new Request([], self::$_sessionManager), new Response($this->_viewsDir));
+            return RouterH::routerPipe($handlersWithMiddlewares, new Request([], self::$_sessionManager), new Response($this->_viewsDir));
         }
 
         $routesForMethod = $this->_routes[$method];
@@ -161,7 +163,7 @@ class Router
             $handlersForMatchRoute = $this->_routes[Router::NOT_FOUND_ROUTE];
             $handlersWithMiddlewares = \array_merge($allMiddlewares ?? [], $handlersForMatchRoute);
 
-            return Helpers::routerPipe($handlersWithMiddlewares, new Request([], self::$_sessionManager), new Response($this->_viewsDir));
+            return RouterH::routerPipe($handlersWithMiddlewares, new Request([], self::$_sessionManager), new Response($this->_viewsDir));
         }
 
         foreach ($routesForMethod as $keyIndexRoute => $pathwithhandler) {
@@ -184,7 +186,7 @@ class Router
 
             if (!\preg_match_all($regexPath, $hostname . $matchPath, $finalParamsMatches)) continue;
 
-            $finalParamsMatches = Helpers::arrayFlat(\array_splice($finalParamsMatches, 1));
+            $finalParamsMatches = ArraysH::arrayFlat(\array_splice($finalParamsMatches, 1));
 
             if (\count($finalParamsMatches) > 0 && isset($matchesToRouteParams[1]) && \count($matchesToRouteParams) > 0) {
                 $finalParamsMatches = \array_combine($matchesToRouteParams[1], $finalParamsMatches);
@@ -195,7 +197,7 @@ class Router
             }, $matchPath);
             $handlersForMatchRoute = \array_values($pathwithhandler);
             $handlersWithMiddlewares = \array_merge($allMiddlewares ?? [], $handlersForMatchRoute);
-            return Helpers::routerPipe($handlersWithMiddlewares, new Request($finalParamsMatches, self::$_sessionManager), new Response($this->_viewsDir));
+            return RouterH::routerPipe($handlersWithMiddlewares, new Request($finalParamsMatches, self::$_sessionManager), new Response($this->_viewsDir));
         }
 
         $matchPath = \explode("?", $path)[0];
@@ -204,7 +206,7 @@ class Router
         }, $matchPath);
         $handlersForMatchRoute = $this->_routes[Router::NOT_FOUND_ROUTE];
         $handlersWithMiddlewares = \array_merge($allMiddlewares ?? [], $handlersForMatchRoute);
-        return Helpers::routerPipe($handlersWithMiddlewares, new Request([], self::$_sessionManager), new Response($this->_viewsDir));
+        return RouterH::routerPipe($handlersWithMiddlewares, new Request([], self::$_sessionManager), new Response($this->_viewsDir));
     }
 
     public function use(...$middleware) : Router

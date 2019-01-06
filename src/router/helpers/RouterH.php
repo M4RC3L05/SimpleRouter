@@ -6,7 +6,7 @@ use SimpleRouter\Router\Response;
 use SimpleRouter\Router\Request;
 
 
-class Helpers
+class RouterH
 {
     private static function _getProperHandler($handler)
     {
@@ -30,7 +30,7 @@ class Helpers
         if (\count($handlers) <= 0) return;
 
         if (\count($handlers) === 1) {
-            $properHandler = Helpers::_getProperHandler($handlers[0]);
+            $properHandler = RouterH::_getProperHandler($handlers[0]);
             if (isset($properHandler) && !\is_null($properHandler)) {
                 return $properHandler($request, $response, function () {
                 });
@@ -41,7 +41,7 @@ class Helpers
 
         $now = array_shift($handlers);
 
-        $properHandler = Helpers::_getProperHandler($now);
+        $properHandler = RouterH::_getProperHandler($now);
 
         if (!isset($properHandler) || \is_null($properHandler)) return;
 
@@ -49,36 +49,11 @@ class Helpers
             if (isset($err) && !is_null($err)) {
                 throw new \Exception($err, 1);
             } else {
-                return Helpers::routerPipe($handlers, $request, $response);
+                return RouterH::routerPipe($handlers, $request, $response);
             }
         };
 
         return $properHandler($request, $response, $next);
     }
 
-    public static function arrayFlat(array $array) : array
-    {
-        $tmp = [];
-        array_walk_recursive($array, function ($v) use (&$tmp) {
-            $tmp[] = $v;
-        });
-
-        return $tmp;
-    }
-
-    public static function memoise($function)
-    {
-        $memo = [];
-
-        return function () use (&$memo, $function) {
-            $args = \implode("", func_get_args());
-
-            if (\array_key_exists($args, $memo)) {
-                return $memo[$args];
-            }
-
-            $memo[$args] = $function(...func_get_args());
-            return $memo[$args];
-        };
-    }
 }
