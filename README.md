@@ -185,7 +185,7 @@ A simple router for php
         -   Check if the session has already started
 
         ```php
-            private function is_session_started() : bool
+            public function is_session_started() : bool
         ```
 
     -   Request - Store the request information
