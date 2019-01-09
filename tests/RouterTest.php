@@ -88,7 +88,6 @@ class RouterTest extends TestCase
         });
 
         $router->match("get", "/ola");
-
         $this->assertEquals("startmiddlewareget", $tmp);
     }
 
