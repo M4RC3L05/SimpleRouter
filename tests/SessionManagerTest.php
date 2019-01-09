@@ -20,7 +20,6 @@ class SessionManagerTest extends TestCase
 
     public function test_it_should_set_to_session()
     {
-        @session_start();
 
         $sm = new SessionManager();
         $sm->set("a", "b");
@@ -32,8 +31,6 @@ class SessionManagerTest extends TestCase
 
     public function test_it_should_get_by_key_from_session()
     {
-        @session_start();
-
         $sm = new SessionManager();
         $sm->set("a", "b");
 
