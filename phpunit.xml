@@ -4,21 +4,7 @@
     colors="true"
     verbose="true"
 >
-    <testsuites>
-        <testsuite name="Router Tests">
-            <file>./tests/RouterTest.php</file>
-        </testsuite>
-        <testsuite name="Request Tests">
-            <file>./tests/RequestTest.php</file>
-        </testsuite>
-        <testsuite name="Response Tests">
-            <file>./tests/ResponseTest.php</file>
-        </testsuite>
-        <testsuite name="SessionManager Tests">
-            <file>./tests/SessionManagerTest.php</file>
-        </testsuite>
-        <testsuite name="Helpers Tests">
-            <directory>./tests/helpers</directory>
-        </testsuite>
-    </testsuites>
+    <testsuite name="SimpleRouter Tests">
+        <directory>./tests</directory>
+    </testsuite>
 </phpunit>

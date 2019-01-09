@@ -2,9 +2,6 @@
     "version": "0.4.3",
     "name": "m4rc3l05/simplerouter",
     "description": "Simple router for php",
-    "scripts": {
-        "test": "phpunit"
-    },
     "require": {
         "php": "^7.1",
         "ralouphie/getallheaders": "^2.0"
@@ -28,7 +25,6 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "SimpleRouter\\": "src",
             "Tests\\": "tests"
         }
     },
