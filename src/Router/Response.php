@@ -8,7 +8,7 @@ class Response
     private $_viewsDir;
     private $_widthData;
 
-    public function __construct(string $viewsDir)
+    public function __construct(string $viewsDir = null)
     {
         $this->_viewsDir = $viewsDir;
     }

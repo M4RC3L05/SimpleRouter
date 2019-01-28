@@ -6,6 +6,7 @@ use SimpleRouter\Router\Helpers\RouterH;
 use SimpleRouter\Router\Request;
 use SimpleRouter\Router\Response;
 use SimpleRouter\Router\SessionManager;
+use SimpleRouter\Router\Handler;
 
 class RouterHTest extends TestCase
 {
@@ -14,22 +15,22 @@ class RouterHTest extends TestCase
         $a = "";
 
         $handlers = [
-            function ($req, $res, $next) use (&$a) {
+            new Handler("get", "/", function ($req, $res, $next) use (&$a) {
                 $a .= "1";
                 $next();
-            },
-            function ($req, $res, $next) use (&$a) {
+            }, ""),
+            new Handler("", "", function ($req, $res, $next) use (&$a) {
                 $a .= "2";
                 $next();
-            },
-            function ($req, $res, $next) use (&$a) {
+            }, ""),
+            new Handler("", "", function ($req, $res, $next) use (&$a) {
                 $a .= "3";
                 $next();
-            }
+            }, "")
         ];
 
         $sessionHandlerSpy = $this->createMock(SessionManager::class);
-        RouterH::routerPipe($handlers, new Request([], $sessionHandlerSpy), new Response(""));
+        RouterH::routerPipe(\array_reverse($handlers), new Request([], $sessionHandlerSpy), new Response(""), "");
         $this->assertEquals("123", $a);
     }
 
@@ -39,21 +40,22 @@ class RouterHTest extends TestCase
         $a = "";
 
         $handlers = [
-            function ($req, $res, $next) use (&$a) {
+            new Handler("get", "/", function ($req, $res, $next) use (&$a) {
                 $a .= "1";
                 $next();
-            },
-            function ($req, $res, $next) use (&$a) {
+            }, ""),
+            new Handler("", "", function ($req, $res, $next) use (&$a) {
                 $a .= "2";
-            },
-            function ($req, $res, $next) use (&$a) {
+
+            }, ""),
+            new Handler("", "", function ($req, $res, $next) use (&$a) {
                 $a .= "3";
                 $next();
-            }
+            }, "")
         ];
 
         $sessionHandlerSpy = $this->createMock(SessionManager::class);
-        RouterH::routerPipe($handlers, new Request([], $sessionHandlerSpy), new Response(""));
+        RouterH::routerPipe(\array_reverse($handlers), new Request([], $sessionHandlerSpy), new Response(""), "");
         $this->assertEquals("12", $a);
     }
 }

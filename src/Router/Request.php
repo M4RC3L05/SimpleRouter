@@ -24,8 +24,13 @@ class Request
         $this->session = $session;
         $this->request = isset($_REQUEST) ? $_REQUEST : [];
         $this->cookies = isset($_COOKIE) ? $_COOKIE : [];
-        $this->headers = getallheaders() ?? [];
+        $this->headers = \function_exists("getallheaders") ? \getallheaders() : [];
         $this->method = $_SERVER["REQUEST_METHOD"] ?? "";
         $this->server = isset($_SERVER) ? $_SERVER : [];
+    }
+
+    public function __set($name, $value)
+    {
+        $this[$name] = $value;
     }
 }

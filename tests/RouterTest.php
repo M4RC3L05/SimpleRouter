@@ -61,34 +61,12 @@ class RouterTest extends TestCase
             $tmp .= "get";
         });
 
-        $router->notFound(function ($req, $res) use (&$tmp) {
+        $router->use(function ($req, $res) use (&$tmp) {
             $tmp .= "notfound";
         });
 
         $router->match("get", "/sds");
         $this->assertEquals("notfound", $tmp);
-    }
-
-    public function test_it_should_pass_middlewares_before_route_handler()
-    {
-        $tmp = "";
-
-        $router = new Router("app.com");
-        $router->get("/ola", function ($req, $res, $next) use (&$tmp) {
-            $tmp .= "middleware";
-
-            $next();
-        }, function ($req, $res) use (&$tmp) {
-            $tmp .= "get";
-        });
-
-        $router->use(function ($req, $res, $next) use (&$tmp) {
-            $tmp .= "start";
-            $next();
-        });
-
-        $router->match("get", "/ola");
-        $this->assertEquals("startmiddlewareget", $tmp);
     }
 
     public function test_it_should_match_routes_with_params_and_return_them_as_response_params()
@@ -101,6 +79,7 @@ class RouterTest extends TestCase
         });
 
         $router->get("/user/:id/prodile/:profid", function ($req, $res) use (&$tmp) {
+
             $tmp .= $req->params["id"];
             $tmp .= $req->params["profid"];
         });
@@ -166,10 +145,11 @@ class RouterTest extends TestCase
 
 
 
+
         \ob_start();
-        $router->match("get", "/user/111");
-        $router->match("get", "/b/abc");
-        $router->match("get", "/b/abc/a");
+        // $router->match("get", "/user/111");
+        // $router->match("get", "/b/abc");
+        // $router->match("get", "/b/abc/a");
         $router->match("get", "/b/ccc/aa/ggg");
         $tmp = \ob_get_clean();
         $this->assertEquals("/user/:id/b/:aaa/b/:aaa/amid for /b/:aaa/aa/b/:aaa/aa/:vvv", $tmp);
