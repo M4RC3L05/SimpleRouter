@@ -83,7 +83,6 @@ class Router
 
             return $acc;
         })([])($this->_handlers);
-
         return RouterH::routerPipe(reverse($handlers), new Request([], $this->_sessionManager), new Response(), $path);
     }
 

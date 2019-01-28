@@ -20,87 +20,90 @@ class RouterTest extends TestCase
 
     public function test_it_should_match_routes()
     {
-        $tmp = "";
 
         $router = new Router("app.com");
         $router->get("/get", function ($req, $res) use (&$tmp) {
-            $tmp .= "get";
+            echo "get";
         });
 
         $router->post("/post", function ($req, $res) use (&$tmp) {
-            $tmp .= "post";
+            echo "post";
         });
 
         $router->put("/put", function ($req, $res) use (&$tmp) {
-            $tmp .= "put";
+            echo "put";
         });
 
         $router->patch("/patch", function ($req, $res) use (&$tmp) {
-            $tmp .= "patch";
+            echo "patch";
         });
 
         $router->delete("/delete", function ($req, $res) use (&$tmp) {
-            $tmp .= "delete";
+            echo "delete";
         });
 
+        \ob_start();
         $router->match("get", "/get");
         $router->match("post", "/post");
         $router->match("put", "/put");
         $router->match("patch", "/patch");
         $router->match("DELETE", "/delete");
-
-        $this->assertEquals("getpostputpatchdelete", $tmp);
+        $res = \ob_get_clean();
+        $this->assertEquals("getpostputpatchdelete", $res);
     }
 
     public function test_it_should_display_not_found_path_if_path_not_exists()
     {
-        $tmp = "";
 
         $router = new Router("app.com");
         $router->get("/ola", function ($req, $res) use (&$tmp) {
-            $tmp .= "get";
+            echo "get";
         });
 
         $router->use(function ($req, $res) use (&$tmp) {
-            $tmp .= "notfound";
+            echo "notfound";
         });
 
+        \ob_start();
         $router->match("get", "/sds");
-        $this->assertEquals("notfound", $tmp);
+        $res = \ob_get_clean();
+        $this->assertEquals("notfound", $res);
     }
 
     public function test_it_should_match_routes_with_params_and_return_them_as_response_params()
     {
-        $tmp = "";
         $router = new Router("app.com");
 
         $router->get("/user/:id", function ($req, $res) use (&$tmp) {
-            $tmp .= $req->params["id"];
+            echo $req->params["id"];
         });
 
         $router->get("/user/:id/prodile/:profid", function ($req, $res) use (&$tmp) {
 
-            $tmp .= $req->params["id"];
-            $tmp .= $req->params["profid"];
+            echo $req->params["id"];
+            echo $req->params["profid"];
         });
 
         $router->get("/user/:id/prodile/:profid/comment/:comid", function ($req, $res) use (&$tmp) {
-            $tmp .= $req->params["id"];
-            $tmp .= $req->params["profid"];
-            $tmp .= $req->params["comid"];
+            echo $req->params["id"];
+            echo $req->params["profid"];
+            echo $req->params["comid"];
         });
 
+        \ob_start();
         $router->match("get", "/user/123");
-        $this->assertEquals("123", $tmp);
-        $tmp = "";
+        $res = \ob_get_clean();
+        $this->assertEquals("123", $res);
 
+        \ob_start();
         $router->match("get", "/user/123/prodile/111");
-        $this->assertEquals("123111", $tmp);
-        $tmp = "";
+        $res = \ob_get_clean();
+        $this->assertEquals("123111", $res);
 
+        \ob_start();
         $router->match("get", "/user/123/prodile/111/comment/321");
-        $this->assertEquals("123111321", $tmp);
-        $tmp = "";
+        $res = \ob_get_clean();
+        $this->assertEquals("123111321", $res);
     }
 
     public function test_it_should_create_groups_routes()
