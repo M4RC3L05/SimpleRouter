@@ -35,6 +35,9 @@ A simple router for php
         // next to move to the next middleware
         ->use(function (Request $req, Response $res, callable $next) {
             echo ("<b>gloabl</b>");
+
+            // must call the $next callable, otherwise
+            // no more handlers will be called
             $next();
         })
 
@@ -43,15 +46,17 @@ A simple router for php
             return $res->sendHtml("<h1>hi</h1>");
         })
 
-        // Custom 404 handler
-        ->notFound(function (Request $request, Response $response) {
-            return $response->status(404)->sendHtml("404, Not found!");
-        })
+        //Create group of routes
         ->group("/g", function (Router $r) {
             $r
                 ->post("/", function (Request $req, Response $res, callable $next) {
+                    // Send a file
                     return $res->sendFile("./a.txt");
                 });
+        })
+        // 404 handler (must be the last)
+        ->use(function (Request $request, Response $response) {
+            return $response->status(404)->sendHtml("404, Not found!");
         })
         // ...
         // To match incomming requests
@@ -62,16 +67,16 @@ A simple router for php
 
 -   Router
 
-    -   Used to register one or many middlewares
+    -   Used to register one or many middlewares (optionally the path as the first argument)
 
     ```php
-        public function use(...$middleware) : Router
+        public function use() : Router
     ```
 
     -   Used to group routes
 
     ```php
-        public function group(string $basePath, \Closure $function) : Router
+        public function group(string $basePath, callable $function) : Router
     ```
 
     -   Used to register a get route and one or many handlers
@@ -102,12 +107,6 @@ A simple router for php
 
     ```php
         public function delete(string $route, ...$handlers) : Router
-    ```
-
-    -   Used to register a 404 not found route and one or many handlers
-
-    ```php
-        public function notFound(string $route, ...$handlers) : Router
     ```
 
     -   Used to match the incomming request
