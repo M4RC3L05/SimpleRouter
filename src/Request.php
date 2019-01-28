@@ -1,6 +1,6 @@
 <?php
 
-namespace SimpleRouter\Router;
+namespace SimpleRouter;
 
 class Request
 {

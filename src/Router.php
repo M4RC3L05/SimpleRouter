@@ -1,18 +1,17 @@
 <?php
 
-namespace SimpleRouter\Router;
+namespace SimpleRouter;
 
-use SimpleRouter\Router\Response;
-use SimpleRouter\Router\Helpers\RouterH;
-use SimpleRouter\Router\Types\IResponse;
-use SimpleRouter\Router\Helpers\ArraysH;
-use SimpleRouter\Router\Helpers\FPH;
+use SimpleRouter\Response;
+use SimpleRouter\Types\IResponse;
+use SimpleRouter\Interfaces\IHandler;
+use SimpleRouter\Interfaces\IRouter;
+use SimpleRouter\Handler;
 use function FPPHP\Lists\slice;
 use function FPPHP\Lists\reduce;
-use SimpleRouter\Router\Interfaces\IHandler;
 use function FPPHP\Lists\reverse;
 
-class Router
+class Router implements IRouter
 {
     private $_handlers;
     private $_viewsDir;
@@ -83,7 +82,8 @@ class Router
 
             return $acc;
         })([])($this->_handlers);
-        return RouterH::routerPipe(reverse($handlers), new Request([], $this->_sessionManager), new Response(), $path);
+
+        return (new RequestHandler(reverse($handlers), $path, $this->_viewsDir, $this->_sessionManager))->pipeHandlers();
     }
 
     public function use() : Router
@@ -99,12 +99,12 @@ class Router
             $handlers = $args;
         }
 
-
         $this->_innerRegisterHandlers(Router::ALL_ROUTE, $path, $handlers);
+
         return $this;
     }
 
-    public function group(string $basePath, \Closure $function) : Router
+    public function group(string $basePath, callable $function) : Router
     {
         $tmpPrevBase = $this->_basePath;
 
@@ -159,7 +159,7 @@ class Router
 
     public function match(string $method, string $path)
     {
-        $this->_innerMath($this->_basePath, $method, $path);
+        return $this->_innerMath($this->_basePath, $method, $path);
     }
 
     public function registerViews(string $viewsDir) : void

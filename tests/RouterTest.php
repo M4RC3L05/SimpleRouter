@@ -2,7 +2,7 @@
 namespace Tests;
 
 use PHPUnit\Framework\TestCase;
-use SimpleRouter\Router\Router;
+use SimpleRouter\Router;
 
 
 class RouterTest extends TestCase

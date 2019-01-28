@@ -2,13 +2,13 @@
 namespace Tests\Helpers;
 
 use PHPUnit\Framework\TestCase;
-use SimpleRouter\Router\Helpers\RouterH;
-use SimpleRouter\Router\Request;
-use SimpleRouter\Router\Response;
-use SimpleRouter\Router\SessionManager;
-use SimpleRouter\Router\Handler;
+use SimpleRouter\Request;
+use SimpleRouter\Response;
+use SimpleRouter\SessionManager;
+use SimpleRouter\Handler;
+use SimpleRouter\RequestHandler;
 
-class RouterHTest extends TestCase
+class RequestHandlerTest extends TestCase
 {
     public function test_it_should_pipe_request_response_and_next_into_handlers()
     {
@@ -29,8 +29,9 @@ class RouterHTest extends TestCase
         ];
 
         $sessionHandlerSpy = $this->createMock(SessionManager::class);
+        $re = new RequestHandler(\array_reverse($handlers), "/", "", $sessionHandlerSpy);
         \ob_start();
-        RouterH::routerPipe(\array_reverse($handlers), new Request([], $sessionHandlerSpy), new Response(""), "");
+        $re->pipeHandlers();
         $res = \ob_get_clean();
         $this->assertEquals("123", $res);
     }
@@ -54,8 +55,9 @@ class RouterHTest extends TestCase
         ];
 
         $sessionHandlerSpy = $this->createMock(SessionManager::class);
+        $re = new RequestHandler(\array_reverse($handlers), "/", "", $sessionHandlerSpy);
         \ob_start();
-        RouterH::routerPipe(\array_reverse($handlers), new Request([], $sessionHandlerSpy), new Response(""), "");
+        $re->pipeHandlers();
         $res = \ob_get_clean();
         $this->assertEquals("12", $res);
     }

@@ -1,11 +1,11 @@
 <?php
 
-namespace SimpleRouter\Router\Interfaces;
+namespace SimpleRouter\Interfaces;
 
 interface IHandler
 {
     public function match(string $regex) : bool;
-    public function getHandler() : callable;
+    public function getHandler();
     public function getPathParams(string $path) : array;
     public function getPath() : string;
     public function getPathRegex() : string;

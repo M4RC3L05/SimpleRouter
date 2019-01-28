@@ -1,8 +1,8 @@
 <?php
 
-namespace SimpleRouter\Router;
+namespace SimpleRouter;
 
-use SimpleRouter\Router\Interfaces\IHandler;
+use SimpleRouter\Interfaces\IHandler;
 use function FPPHP\Lists\map;
 use function FPPHP\Lists\zipAssoc;
 use function FPPHP\Lists\reverse;
@@ -19,7 +19,7 @@ class Handler implements IHandler
     private $_pathParams;
     private $_basePath;
 
-    public function __construct(string $_verb, string $pathOriginal, callable $handler, string $basePath)
+    public function __construct(string $_verb, string $pathOriginal, $handler, string $basePath)
     {
         $this->_verb = $_verb;
         $this->_handler = $handler;
@@ -33,7 +33,7 @@ class Handler implements IHandler
         return \preg_match_all($this->_pathRegex, $path);
     }
 
-    public function getHandler() : callable
+    public function getHandler()
     {
         return $this->_handler;
     }

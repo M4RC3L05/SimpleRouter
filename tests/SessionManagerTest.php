@@ -3,7 +3,7 @@
 namespace Tests;
 
 use PHPUnit\Framework\TestCase;
-use SimpleRouter\Router\SessionManager;
+use SimpleRouter\SessionManager;
 
 
 class SessionManagerTest extends TestCase

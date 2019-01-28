@@ -3,7 +3,7 @@
 namespace Tests;
 
 use PHPUnit\Framework\TestCase;
-use SimpleRouter\Router\Response;
+use SimpleRouter\Response;
 
 
 class ResponseTest extends TestCase

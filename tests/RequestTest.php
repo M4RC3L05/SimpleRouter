@@ -4,8 +4,8 @@ namespace Tests;
 
 
 use PHPUnit\Framework\TestCase;
-use SimpleRouter\Router\Request;
-use SimpleRouter\Router\SessionManager;
+use SimpleRouter\Request;
+use SimpleRouter\SessionManager;
 
 class RequestTest extends TestCase
 {
