@@ -62,7 +62,7 @@ class RequestHandler
             }
         })->bindTo($this);
 
-        $this->_request->params = $now->getPathParams($this->_currPath);
+        $this->_request->params = $now->getPathParams();
         return $properHandler($this->_request, $this->_response, $next);
     }
 }

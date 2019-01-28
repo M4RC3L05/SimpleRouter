@@ -73,17 +73,21 @@ class Router implements IRouter
 
         $verb = \strtoupper($method);
 
-        $handlers = reduce(function ($acc, IHandler $curr) use ($verb, $path) {
+        $pathOnly = \parse_url($path)["path"];
+
+        $handlers = reduce(function ($acc, IHandler $curr) use ($verb, $path, $pathOnly) {
             if ($curr->getVerb() !== Router::ALL_ROUTE && $curr->getVerb() !== $verb) return $acc;
 
-            if (!$curr->match($path)) return $acc;
+            if (!$curr->match($pathOnly)) return $acc;
+
+            $curr->populatePathParams($pathOnly);
 
             \array_push($acc, $curr);
 
             return $acc;
         })([])($this->_handlers);
 
-        return (new RequestHandler(reverse($handlers), $path, $this->_viewsDir, $this->_sessionManager))->pipeHandlers();
+        return (new RequestHandler(reverse($handlers), $pathOnly, $this->_viewsDir, $this->_sessionManager))->pipeHandlers();
     }
 
     public function use() : Router

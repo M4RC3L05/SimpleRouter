@@ -38,7 +38,7 @@ class Handler implements IHandler
         return $this->_handler;
     }
 
-    public function getPathParams(string $path) : array
+    public function populatePathParams(string $path)
     {
         if (\count($this->_pathParams) <= 0) return $this->_pathParams;
 
@@ -49,7 +49,12 @@ class Handler implements IHandler
         \array_shift($paramData);
         $paramData = flatten($paramData);
 
-        return zipAssoc($this->_pathParams)($paramData);
+        $this->_pathParams = zipAssoc($this->_pathParams)($paramData);
+    }
+
+    public function getPathParams() : array
+    {
+        return $this->_pathParams;
     }
 
     public function getPath() : string

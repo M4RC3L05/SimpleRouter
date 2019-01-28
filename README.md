@@ -22,9 +22,9 @@ A simple router for php
         require_once __DIR__ . '/../vendor/autoload.php';
 
         // Import simple router
-        use SimpleRouter\Router\Router;
-        use SimpleRouter\Router\Response;
-        use SimpleRouter\Router\Request;
+        use SimpleRouter\Router;
+        use SimpleRouter\Response;
+        use SimpleRouter\Request;
 
         // Create a new Router
         $router = new Router();
@@ -33,13 +33,13 @@ A simple router for php
         $router
         // Used for middlewares, you have to call
         // next to move to the next middleware
-        ->use(function (Request $req, Response $res, Closure $next) {
+        ->use(function (Request $req, Response $res, callable $next) {
             echo ("<b>gloabl</b>");
             $next();
         })
 
         // GET method
-        ->get("/", function (Request $req, Response $res, Closure $next) {
+        ->get("/", function (Request $req, Response $res, callable $next) {
             return $res->sendHtml("<h1>hi</h1>");
         })
 
@@ -49,7 +49,7 @@ A simple router for php
         })
         ->group("/g", function (Router $r) {
             $r
-                ->post("/", function (Request $req, Response $res, Closure $next) {
+                ->post("/", function (Request $req, Response $res, callable $next) {
                     return $res->sendFile("./a.txt");
                 });
         })
