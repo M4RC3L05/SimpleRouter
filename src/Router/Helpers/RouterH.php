@@ -32,30 +32,21 @@ class RouterH
 
         if (\count($handlers) <= 0) return;
 
-        if (\count($handlers) === 1) {
-            $properHandler = RouterH::_getProperHandler($handlers[0]);
-            if (isset($properHandler) && !\is_null($properHandler)) {
-                return $properHandler($request, $response, function () {
-                });
-            } else {
-                return;
-            }
-        }
-
         $now = array_pop($handlers);
+
 
         $properHandler = RouterH::_getProperHandler($now);
 
         if (!isset($properHandler) || \is_null($properHandler)) return null;
 
-        $next = function ($err = null) use ($handlers, $request, $response, $path) {
+        $next = \count($handlers) <= 0 ? (function () {
+        }) : (function ($err = null) use ($handlers, $request, $response, $path) {
             if (isset($err) && !is_null($err)) {
                 throw new \Exception($err, 1);
             } else {
-
                 return RouterH::routerPipe($handlers, $request, $response, $path);
             }
-        };
+        });
 
         $request->params = $now->getPathParams($path);
         return $properHandler($request, $response, $next);

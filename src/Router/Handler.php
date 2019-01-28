@@ -5,6 +5,8 @@ namespace SimpleRouter\Router;
 use SimpleRouter\Router\Interfaces\IHandler;
 use function FPPHP\Lists\map;
 use function FPPHP\Lists\zipAssoc;
+use function FPPHP\Lists\reverse;
+use function FPPHP\Lists\flatten;
 
 
 class Handler implements IHandler
@@ -20,9 +22,9 @@ class Handler implements IHandler
     public function __construct(string $_verb, string $pathOriginal, callable $handler, string $basePath)
     {
         $this->_verb = $_verb;
-        $this->_pathOriginal = $pathOriginal;
         $this->_handler = $handler;
         $this->_basePath = $basePath;
+        $this->_pathOriginal = $this->_formatPath($pathOriginal);
         $this->_pathToRegex();
     }
 
@@ -38,13 +40,16 @@ class Handler implements IHandler
 
     public function getPathParams(string $path) : array
     {
+        if (\count($this->_pathParams) <= 0) return $this->_pathParams;
+
         $paramData = [];
 
         \preg_match_all($this->_pathRegex, $path, $paramData);
-        if (\count($paramData) <= 1 || !\array_key_exists(1, $paramData))
-            return $this->_pathParams;
 
-        return zipAssoc($this->_pathParams)($paramData[1]);
+        \array_shift($paramData);
+        $paramData = flatten($paramData);
+
+        return zipAssoc($this->_pathParams)($paramData);
     }
 
     public function getPath() : string
@@ -62,24 +67,33 @@ class Handler implements IHandler
         return $this->_verb;
     }
 
+    private function _formatPath(string $path) : string
+    {
+        $finalPath = $path;
+
+        if ($this->_basePath === "/")
+            $finalPath = $finalPath = $path;
+
+        else if ($this->_basePath !== "/" && $path === "/")
+            $finalPath = $finalPath = $this->_basePath;
+        else
+            $finalPath = $this->_basePath . $path;
+
+        if (!\substr($finalPath, -1) !== "/")
+            $finalPath .= "/";
+
+        return $finalPath;
+    }
+
     private function _pathToRegex()
     {
 
         if ($this->_pathOriginal === "*") {
             $this->_pathParams = [];
-            $this->_pathRegex = "/^" . \preg_replace("/\//", "\/", $this->_basePath) . ".*" . ($this->_pathOriginal === "/" ? "" : "\/") . "?$/";
+            $this->_pathRegex = "/^" . \preg_replace("/\//", "\/", $this->_basePath) . ".*" . "\/" . "?$/";
             return;
         }
 
-        $finalPath = "";
-
-        if ($this->_basePath === "/") {
-            $finalPath = $this->_pathOriginal;
-        } else if ($this->_basePath !== "/" && $this->_pathOriginal === "/") {
-            $finalPath = $this->_basePath;
-        } else {
-            $finalPath = $this->_basePath . $this->_pathOriginal;
-        }
 
 
         $matchesToRouteParams = [];
@@ -93,7 +107,7 @@ class Handler implements IHandler
             $this->_pathParams = [];
         }
 
-        $this->_pathRegex = "/^" . \preg_replace(["/\//", "/\/\:[A-Za-z0-9_]+/", "/\/\*/"], ["\/", "/([^\/]+?)", "/.*"], $this->_pathOriginal) . ($this->_pathOriginal === "/" ? "" : "\/") . "?$/";
+        $this->_pathRegex = "/^" . \preg_replace(["/\//", "/\/\:[A-Za-z0-9_]+/", "/\/\*/"], ["\/", "/([^\/]+?)", "/*.*"], $this->_pathOriginal) . "?$/";
     }
 }
     

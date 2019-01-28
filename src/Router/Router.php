@@ -84,22 +84,22 @@ class Router
             return $acc;
         })([])($this->_handlers);
 
-
         return RouterH::routerPipe(reverse($handlers), new Request([], $this->_sessionManager), new Response(), $path);
     }
 
     public function use() : Router
     {
         $args = \func_get_args();
-        $path = $this->_basePath . "*";
+        $path = "/*";
         $handlers = [];
 
         if (\is_string($args[0])) {
-            $path = $args[0];
+            $path = $args[0] . "/*";
             $handlers = slice(1)(\count($args))($args);
         } else {
             $handlers = $args;
         }
+
 
         $this->_innerRegisterHandlers(Router::ALL_ROUTE, $path, $handlers);
         return $this;

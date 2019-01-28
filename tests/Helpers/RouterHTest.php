@@ -12,31 +12,31 @@ class RouterHTest extends TestCase
 {
     public function test_it_should_pipe_request_response_and_next_into_handlers()
     {
-        $a = "";
 
         $handlers = [
             new Handler("get", "/", function ($req, $res, $next) use (&$a) {
-                $a .= "1";
+                echo "1";
                 $next();
             }, ""),
-            new Handler("", "", function ($req, $res, $next) use (&$a) {
-                $a .= "2";
+            new Handler("get", "/", function ($req, $res, $next) use (&$a) {
+                echo "2";
                 $next();
             }, ""),
-            new Handler("", "", function ($req, $res, $next) use (&$a) {
-                $a .= "3";
+            new Handler("get", "/", function ($req, $res, $next) use (&$a) {
+                echo "3";
                 $next();
             }, "")
         ];
 
         $sessionHandlerSpy = $this->createMock(SessionManager::class);
+        \ob_start();
         RouterH::routerPipe(\array_reverse($handlers), new Request([], $sessionHandlerSpy), new Response(""), "");
-        $this->assertEquals("123", $a);
+        $res = \ob_get_clean();
+        $this->assertEquals("123", $res);
     }
 
     public function test_it_should_not_pipe_request_response_and_next_if_next_is_not_called()
     {
-
         $a = "";
 
         $handlers = [
@@ -46,7 +46,6 @@ class RouterHTest extends TestCase
             }, ""),
             new Handler("", "", function ($req, $res, $next) use (&$a) {
                 $a .= "2";
-
             }, ""),
             new Handler("", "", function ($req, $res, $next) use (&$a) {
                 $a .= "3";

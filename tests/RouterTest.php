@@ -147,9 +147,9 @@ class RouterTest extends TestCase
 
 
         \ob_start();
-        // $router->match("get", "/user/111");
-        // $router->match("get", "/b/abc");
-        // $router->match("get", "/b/abc/a");
+        $router->match("get", "/user/111");
+        $router->match("get", "/b/abc");
+        $router->match("get", "/b/abc/a");
         $router->match("get", "/b/ccc/aa/ggg");
         $tmp = \ob_get_clean();
         $this->assertEquals("/user/:id/b/:aaa/b/:aaa/amid for /b/:aaa/aa/b/:aaa/aa/:vvv", $tmp);
