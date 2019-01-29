@@ -3,6 +3,7 @@
 namespace SimpleRouter;
 
 use SimpleRouter\Interfaces\IHandler;
+use SimpleRouter\Interfaces\IViewEngine;
 
 
 class RequestHandler
@@ -14,6 +15,7 @@ class RequestHandler
 
     public function __construct(array $handlers, string $currPath, SessionManager $sessionManager, IViewEngine $viewEngine = null)
     {
+
         $this->_handlers = $handlers;
         $this->_currPath = $currPath;
         $this->_request = new Request([], $sessionManager);

@@ -5,7 +5,9 @@
     "require": {
         "php": "^7.1",
         "m4rc3l05/fp-php": "^0.1.1",
-        "twig/twig": "^2.0"
+        "twig/twig": "^2.0",
+        "mustache/mustache": "^2.12",
+        "league/plates": "^3.3"
     },
     "keywords": [
         "php",
