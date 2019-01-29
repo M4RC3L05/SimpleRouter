@@ -12,7 +12,7 @@ A simple router for php
         $ composer require m4rc3l05/simplerouter
     ```
 
-2. Import to you code and use
+2. Import to you code and have fun
 
     ```php
         // require autoload file
@@ -58,7 +58,12 @@ A simple router for php
         // 404 handler (must be the last)
         ->use(function (Request $request, Response $response) {
             return $response->status(404)->sendHtml("404, Not found!");
-        });
+        })
+        // Custom error handler, must provide the 4 arguments
+        // (must be the last, if not present, the default error handler will be used)
+        ->use(function ($error, Request $request, Response $response, $next) {
+            return $response->status(500)->sendHtml("<h1>Error!!!</h1>{$error}");
+        })
         // ...
         // To handle incomming requests
         $app->handleRequest();

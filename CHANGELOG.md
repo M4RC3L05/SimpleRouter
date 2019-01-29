@@ -1,3 +1,7 @@
+#2.2.0
+
+-   Implement error handling route
+
 #2.1.1
 
 -   Update custom data from "data" to "custom" on request
