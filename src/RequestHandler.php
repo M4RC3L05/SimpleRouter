@@ -12,14 +12,14 @@ class RequestHandler
     private $_request;
     private $_response;
 
-    public function __construct(array $handlers, string $currPath, string $viewsDir = null, $sessionManager)
+    public function __construct(array $handlers, string $currPath, SessionManager $sessionManager, ViewEngine $viewEngine = null)
     {
         $this->_handlers = $handlers;
 
         $this->_currPath = $currPath;
 
         $this->_request = new Request([], $sessionManager);
-        $this->_response = new Response($viewsDir);
+        $this->_response = new Response($viewEngine);
     }
 
     private function _getProperHandler(IHandler $handlerWrapper)

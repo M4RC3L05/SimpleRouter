@@ -5,12 +5,12 @@ namespace SimpleRouter;
 
 class Response
 {
-    private $_viewsDir;
-    private $_widthData;
 
-    public function __construct(string $viewsDir = null)
+    private $_viewEngine;
+
+    public function __construct(ViewEngine $viewEngine = null)
     {
-        $this->_viewsDir = $viewsDir;
+        $this->_viewEngine = $viewEngine;
     }
 
     public function status(int $code) : Response
@@ -66,20 +66,11 @@ class Response
 
     public function view(string $viewName)
     {
-        $splitViewName = \explode(".", $viewName);
 
-        if (!isset($this->_viewsDir)) throw new \Exception("No views directory provided", 1);
+        if (!$this->_viewEngine) throw new Exception("No view Engine resgistered");
 
-        if (!\is_dir($this->_viewsDir . \DIRECTORY_SEPARATOR . $splitViewName[0])) throw new \Exception("No view found.", 1);
 
-        if (!\is_file($this->_viewsDir . \DIRECTORY_SEPARATOR . $splitViewName[0] . \DIRECTORY_SEPARATOR . $splitViewName[1] . ".view.php")) throw new \Exception("No view found.", 1);
-        $strRequire = $this->_viewsDir . \DIRECTORY_SEPARATOR . $splitViewName[0] . \DIRECTORY_SEPARATOR . $splitViewName[1] . ".view.php";
-
-        \extract($this->_widthData);
-        \ob_start();
-        require($strRequire);
-        $content = \ob_get_clean();
-        return $this->sendHtml($content);
+        return $this->sendHtml($this->_viewEngine->renderView($viewName . ".twig", $this->_widthData));
     }
 
     public function withHeaders(array $headers) : Response

@@ -4,6 +4,7 @@ namespace Tests;
 
 use PHPUnit\Framework\TestCase;
 use SimpleRouter\Response;
+use SimpleRouter\ViewEngine;
 
 
 class ResponseTest extends TestCase
@@ -12,7 +13,8 @@ class ResponseTest extends TestCase
     public function test_it_should_create_a_response_object()
     {
         try {
-            $response = new Response("");
+            $viewEgMock = $this->createMock(ViewEngine::class);
+            $response = new Response($viewEgMock);
             $this->assertEquals(1, 1);
         } catch (\Exception $e) {
             $this->assertEquals(1, 2);
@@ -21,7 +23,8 @@ class ResponseTest extends TestCase
 
     public function test_it_should_make_a_json_response()
     {
-        $response = new Response("");
+        $viewEgMock = $this->createMock(ViewEngine::class);
+        $response = new Response($viewEgMock);
         ob_start();
         $response->json(["a" => 1]);
         $json = ob_get_clean();
@@ -30,7 +33,8 @@ class ResponseTest extends TestCase
 
     public function test_it_should_make_a_string_html_response()
     {
-        $response = new Response("");
+        $viewEgMock = $this->createMock(ViewEngine::class);
+        $response = new Response($viewEgMock);
         ob_start();
         $response->sendString("ola");
         $string = ob_get_clean();

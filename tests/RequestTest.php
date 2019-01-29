@@ -9,16 +9,8 @@ use SimpleRouter\SessionManager;
 
 class RequestTest extends TestCase
 {
-
-    public static function setUpBeforeClass()
-    {
-        // session_start();
-    }
-
     public function test_it_should_create_a_new_request_object()
     {
-
-
         try {
             $sessionHandlerSpy = $this->createMock(SessionManager::class);
             $obj = new Request([], $sessionHandlerSpy);
@@ -26,6 +18,5 @@ class RequestTest extends TestCase
         } catch (\Exception $e) {
             $this->assertEquals(1, 2);
         }
-
     }
 }

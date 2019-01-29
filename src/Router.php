@@ -14,10 +14,10 @@ use function FPPHP\Lists\reverse;
 class Router implements IRouter
 {
     private $_handlers;
-    private $_viewsDir;
     private $_sessionManager;
     private $_basePath;
     private $_hostname;
+    private $_viewEngine;
 
     private const ALL_ROUTE = "ALL_ROUTE";
     private const GET_ROUTE = "GET";
@@ -29,7 +29,6 @@ class Router implements IRouter
     public function __construct(string $hostname = null, string $basePath = "/")
     {
         $this->_handlers = [];
-        $this->_viewsDir = "";
         $this->_sessionManager = new SessionManager();
         if ($hostname) {
             $this->_hostname = $hostname;
@@ -87,7 +86,7 @@ class Router implements IRouter
             return $acc;
         })([])($this->_handlers);
 
-        return (new RequestHandler(reverse($handlers), $pathOnly, $this->_viewsDir, $this->_sessionManager))->pipeHandlers();
+        return (new RequestHandler(reverse($handlers), $pathOnly, $this->_sessionManager, $this->_viewEngine))->pipeHandlers();
     }
 
     public function use() : Router
@@ -170,6 +169,6 @@ class Router implements IRouter
     {
         if (!\is_dir($viewsDir)) return;
 
-        $this->_viewsDir = $viewsDir;
+        $this->_viewEngine = new ViewEngine($viewsDir);
     }
 }

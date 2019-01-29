@@ -29,7 +29,7 @@ class RequestHandlerTest extends TestCase
         ];
 
         $sessionHandlerSpy = $this->createMock(SessionManager::class);
-        $re = new RequestHandler(\array_reverse($handlers), "/", "", $sessionHandlerSpy);
+        $re = new RequestHandler(\array_reverse($handlers), "/", $sessionHandlerSpy);
         \ob_start();
         $re->pipeHandlers();
         $res = \ob_get_clean();
@@ -55,7 +55,7 @@ class RequestHandlerTest extends TestCase
         ];
 
         $sessionHandlerSpy = $this->createMock(SessionManager::class);
-        $re = new RequestHandler(\array_reverse($handlers), "/", "", $sessionHandlerSpy);
+        $re = new RequestHandler(\array_reverse($handlers), "/", $sessionHandlerSpy);
         \ob_start();
         $re->pipeHandlers();
         $res = \ob_get_clean();
