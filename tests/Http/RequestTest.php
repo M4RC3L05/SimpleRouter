@@ -22,7 +22,7 @@ class RequestTest extends TestCase
     public function test_it_should_set_custom_data_to_the_request()
     {
         $obj = new Request();
-        $obj->set("authUserID", 12);
-        $this->assertEquals(["authUserID" => 12], $obj->data);
+        $obj->custom["authUserID"] = 12;
+        $this->assertEquals(["authUserID" => 12], $obj->custom);
     }
 }
