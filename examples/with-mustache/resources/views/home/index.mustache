@@ -1,0 +1,21 @@
+{{% ANCHORED-DOT }}
+{{% BLOCKS }}
+{{< layout/master }}
+
+{{$ title }}{{ title }}{{/ title }}
+
+{{$ content }}
+<h1>Hi</h1>
+<p>Users</p>
+
+<ul>
+{{#users}}
+<li>{{.}}</li>
+{{/users}}
+</ul>
+{{^users}}
+<p>No Users</p>
+{{/users}}
+{{/ content }}
+
+{{/ layout/master }}

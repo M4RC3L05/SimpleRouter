@@ -1,0 +1,501 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "e00642f208e9fab3abfbb7a584eaf3f2",
+    "packages": [
+        {
+            "name": "league/plates",
+            "version": "3.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/plates.git",
+                "reference": "b1684b6f127714497a0ef927ce42c0b44b45a8af"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/plates/zipball/b1684b6f127714497a0ef927ce42c0b44b45a8af",
+                "reference": "b1684b6f127714497a0ef927ce42c0b44b45a8af",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.3 | ^7.0"
+            },
+            "require-dev": {
+                "mikey179/vfsstream": "^1.4",
+                "phpunit/phpunit": "~4.0",
+                "squizlabs/php_codesniffer": "~1.5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "League\\Plates\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jonathan Reinink",
+                    "email": "jonathan@reinink.ca",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Plates, the native PHP template system that's fast, easy to use and easy to extend.",
+            "homepage": "http://platesphp.com",
+            "keywords": [
+                "league",
+                "package",
+                "templates",
+                "templating",
+                "views"
+            ],
+            "time": "2016-12-28T00:14:17+00:00"
+        },
+        {
+            "name": "m4rc3l05/fp-php",
+            "version": "0.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/M4RC3L05/fp-php.git",
+                "reference": "f4cad4796e2a6393bf095d797c64ffc59e55c83f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/M4RC3L05/fp-php/zipball/f4cad4796e2a6393bf095d797c64ffc59e55c83f",
+                "reference": "f4cad4796e2a6393bf095d797c64ffc59e55c83f",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~6"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/utils/isAssoc.php",
+                    "src/functions/compose.php",
+                    "src/functions/curry.php",
+                    "src/functions/memoize.php",
+                    "src/functions/pipe.php",
+                    "src/functions/partial.php",
+                    "src/functions/partialRight.php",
+                    "src/lists/forevery.php",
+                    "src/lists/some.php",
+                    "src/lists/every.php",
+                    "src/lists/reduce.php",
+                    "src/lists/last.php",
+                    "src/lists/take.php",
+                    "src/lists/head.php",
+                    "src/lists/tail.php",
+                    "src/lists/takeLast.php",
+                    "src/lists/map.php",
+                    "src/lists/filter.php",
+                    "src/lists/reduceRight.php",
+                    "src/lists/reverse.php",
+                    "src/lists/append.php",
+                    "src/lists/chain.php",
+                    "src/lists/concat.php",
+                    "src/lists/aperture.php",
+                    "src/lists/contains.php",
+                    "src/lists/drop.php",
+                    "src/lists/dropLast.php",
+                    "src/lists/dropLastWhile.php",
+                    "src/lists/dropRepeats.php",
+                    "src/lists/dropRepeatsWith.php",
+                    "src/lists/dropWhile.php",
+                    "src/lists/endsWith.php",
+                    "src/lists/endsWith.php",
+                    "src/lists/find.php",
+                    "src/lists/find.php",
+                    "src/lists/findIndex.php",
+                    "src/lists/findIndex.php",
+                    "src/lists/findLast.php",
+                    "src/lists/findLast.php",
+                    "src/lists/findLastIndex.php",
+                    "src/lists/flatten.php",
+                    "src/lists/fromPairs.php",
+                    "src/lists/groupBy.php",
+                    "src/lists/groupWith.php",
+                    "src/lists/includes.php",
+                    "src/lists/indexBy.php",
+                    "src/lists/init.php",
+                    "src/lists/init.php",
+                    "src/lists/insert.php",
+                    "src/lists/insertAll.php",
+                    "src/lists/intersperse.php",
+                    "src/lists/into.php",
+                    "src/lists/join.php",
+                    "src/lists/last.php",
+                    "src/lists/lastIndexOf.php",
+                    "src/lists/indexOf.php",
+                    "src/lists/length.php",
+                    "src/lists/mapAccum.php",
+                    "src/lists/mapAccumRight.php",
+                    "src/lists/mergeAll.php",
+                    "src/lists/move.php",
+                    "src/lists/none.php",
+                    "src/lists/nth.php",
+                    "src/lists/nth.php",
+                    "src/lists/partition.php",
+                    "src/lists/pluck.php",
+                    "src/lists/prepend.php",
+                    "src/lists/rangeList.php",
+                    "src/lists/reduceBy.php",
+                    "src/lists/reduceWhile.php",
+                    "src/lists/reject.php",
+                    "src/lists/reject.php",
+                    "src/lists/remove.php",
+                    "src/lists/repeat.php",
+                    "src/lists/scan.php",
+                    "src/lists/slice.php",
+                    "src/lists/listSort.php",
+                    "src/lists/splitAt.php",
+                    "src/lists/splitEvery.php",
+                    "src/lists/splitWhen.php",
+                    "src/lists/startsWith.php",
+                    "src/lists/takeLastWhile.php",
+                    "src/lists/takeWhile.php",
+                    "src/lists/times.php",
+                    "src/lists/transduce.php",
+                    "src/lists/transpose.php",
+                    "src/lists/unfold.php",
+                    "src/lists/uniq.php",
+                    "src/lists/uniqBy.php",
+                    "src/lists/uniqBy.php",
+                    "src/lists/uniqWith.php",
+                    "src/lists/uniqWith.php",
+                    "src/lists/unnest.php",
+                    "src/lists/update.php",
+                    "src/lists/without.php",
+                    "src/lists/xprod.php",
+                    "src/lists/zip.php",
+                    "src/lists/zipAssoc.php",
+                    "src/lists/zipWith.php",
+                    "src/lists/adjust.php",
+                    "src/lists/all.php",
+                    "src/lists/any.php",
+                    "src/functions/always.php",
+                    "src/functions/ap.php",
+                    "src/functions/apply.php",
+                    "src/functions/apply.php",
+                    "src/functions/applySpec.php",
+                    "src/functions/applyTo.php",
+                    "src/functions/ascend.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "João Baptista",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Colection of functional programming utilities for php",
+            "homepage": "https://github.com/M4RC3L05/fp-php",
+            "keywords": [
+                "fp",
+                "functional programming",
+                "php"
+            ],
+            "time": "2019-01-25T18:50:34+00:00"
+        },
+        {
+            "name": "m4rc3l05/simplerouter",
+            "version": "2.2.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/M4RC3L05/SimpleRouter.git",
+                "reference": "6f0c55cc98b49bc05f994ea949603ba94d8bf8aa"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/M4RC3L05/SimpleRouter/zipball/6f0c55cc98b49bc05f994ea949603ba94d8bf8aa",
+                "reference": "6f0c55cc98b49bc05f994ea949603ba94d8bf8aa",
+                "shasum": ""
+            },
+            "require": {
+                "m4rc3l05/fp-php": "^0.1.1",
+                "php": "^7.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "SimpleRouter\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "João Baptista",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Simple router for php",
+            "homepage": "https://github.com/M4RC3L05/SimpleRouter",
+            "keywords": [
+                "php",
+                "router"
+            ],
+            "time": "2019-01-29T20:12:44+00:00"
+        },
+        {
+            "name": "mustache/mustache",
+            "version": "v2.12.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bobthecow/mustache.php.git",
+                "reference": "fe8fe72e9d580591854de404cc59a1b83ca4d19e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bobthecow/mustache.php/zipball/fe8fe72e9d580591854de404cc59a1b83ca4d19e",
+                "reference": "fe8fe72e9d580591854de404cc59a1b83ca4d19e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2.4"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "~1.11",
+                "phpunit/phpunit": "~3.7|~4.0|~5.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Mustache": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Justin Hileman",
+                    "email": "justin@justinhileman.info",
+                    "homepage": "http://justinhileman.com"
+                }
+            ],
+            "description": "A Mustache implementation in PHP.",
+            "homepage": "https://github.com/bobthecow/mustache.php",
+            "keywords": [
+                "mustache",
+                "templating"
+            ],
+            "time": "2017-07-11T12:54:05+00:00"
+        },
+        {
+            "name": "symfony/polyfill-ctype",
+            "version": "v1.10.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/polyfill-ctype.git",
+                "reference": "e3d826245268269cd66f8326bd8bc066687b4a19"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/e3d826245268269cd66f8326bd8bc066687b4a19",
+                "reference": "e3d826245268269cd66f8326bd8bc066687b4a19",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "suggest": {
+                "ext-ctype": "For best performance"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.9-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Polyfill\\Ctype\\": ""
+                },
+                "files": [
+                    "bootstrap.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                },
+                {
+                    "name": "Gert de Pagter",
+                    "email": "backendtea@gmail.com"
+                }
+            ],
+            "description": "Symfony polyfill for ctype functions",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "compatibility",
+                "ctype",
+                "polyfill",
+                "portable"
+            ],
+            "time": "2018-08-06T14:22:27+00:00"
+        },
+        {
+            "name": "symfony/polyfill-mbstring",
+            "version": "v1.10.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/polyfill-mbstring.git",
+                "reference": "c79c051f5b3a46be09205c73b80b346e4153e494"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/c79c051f5b3a46be09205c73b80b346e4153e494",
+                "reference": "c79c051f5b3a46be09205c73b80b346e4153e494",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "suggest": {
+                "ext-mbstring": "For best performance"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.9-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Polyfill\\Mbstring\\": ""
+                },
+                "files": [
+                    "bootstrap.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony polyfill for the Mbstring extension",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "compatibility",
+                "mbstring",
+                "polyfill",
+                "portable",
+                "shim"
+            ],
+            "time": "2018-09-21T13:07:52+00:00"
+        },
+        {
+            "name": "twig/twig",
+            "version": "v2.6.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/twigphp/Twig.git",
+                "reference": "7d7342c8a4059fefb9b8d07db0cc14007021f9b7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/7d7342c8a4059fefb9b8d07db0cc14007021f9b7",
+                "reference": "7d7342c8a4059fefb9b8d07db0cc14007021f9b7",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.0",
+                "symfony/polyfill-ctype": "^1.8",
+                "symfony/polyfill-mbstring": "^1.3"
+            },
+            "require-dev": {
+                "psr/container": "^1.0",
+                "symfony/debug": "^2.7",
+                "symfony/phpunit-bridge": "^3.4.19|^4.1.8"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.6-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Twig_": "lib/"
+                },
+                "psr-4": {
+                    "Twig\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com",
+                    "homepage": "http://fabien.potencier.org",
+                    "role": "Lead Developer"
+                },
+                {
+                    "name": "Armin Ronacher",
+                    "email": "armin.ronacher@active-4.com",
+                    "role": "Project Founder"
+                },
+                {
+                    "name": "Twig Team",
+                    "homepage": "https://twig.symfony.com/contributors",
+                    "role": "Contributors"
+                }
+            ],
+            "description": "Twig, the flexible, fast, and secure template language for PHP",
+            "homepage": "https://twig.symfony.com",
+            "keywords": [
+                "templating"
+            ],
+            "time": "2019-01-14T15:00:48+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}

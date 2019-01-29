@@ -8,7 +8,7 @@
     ],
     "require": {
         "m4rc3l05/simplerouter": "^2.2.2",
-        "duncan3dc/blade": "^4.3"
+        "mustache/mustache": "^2.12"
     },
     "autoload": {
         "psr-4": {
