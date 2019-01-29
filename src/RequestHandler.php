@@ -12,12 +12,10 @@ class RequestHandler
     private $_request;
     private $_response;
 
-    public function __construct(array $handlers, string $currPath, SessionManager $sessionManager, ViewEngine $viewEngine = null)
+    public function __construct(array $handlers, string $currPath, SessionManager $sessionManager, IViewEngine $viewEngine = null)
     {
         $this->_handlers = $handlers;
-
         $this->_currPath = $currPath;
-
         $this->_request = new Request([], $sessionManager);
         $this->_response = new Response($viewEngine);
     }

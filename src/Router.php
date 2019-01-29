@@ -6,6 +6,7 @@ use SimpleRouter\Response;
 use SimpleRouter\Types\IResponse;
 use SimpleRouter\Interfaces\IHandler;
 use SimpleRouter\Interfaces\IRouter;
+use SimpleRouter\Interfaces\IViewEngine;
 use SimpleRouter\Handler;
 use function FPPHP\Lists\slice;
 use function FPPHP\Lists\reduce;
@@ -165,10 +166,8 @@ class Router implements IRouter
         return $this->_innerMath($this->_basePath, $method, $path);
     }
 
-    public function registerViews(string $viewsDir) : void
+    public function registerViews(IViewEngine $viewEngine) : void
     {
-        if (!\is_dir($viewsDir)) return;
-
-        $this->_viewEngine = new ViewEngine($viewsDir);
+        $this->_viewEngine = $viewEngine;
     }
 }

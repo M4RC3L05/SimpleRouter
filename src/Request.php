@@ -28,9 +28,4 @@ class Request
         $this->method = $_SERVER["REQUEST_METHOD"] ?? "";
         $this->server = isset($_SERVER) ? $_SERVER : [];
     }
-
-    public function __set($name, $value)
-    {
-        $this[$name] = $value;
-    }
 }

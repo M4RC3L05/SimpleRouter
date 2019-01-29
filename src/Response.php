@@ -2,6 +2,7 @@
 
 namespace SimpleRouter;
 
+use SimpleRouter\Interfaces\IViewEngine;
 
 class Response
 {
@@ -9,7 +10,7 @@ class Response
     private $_viewEngine;
     private $_withData;
 
-    public function __construct(ViewEngine $viewEngine = null)
+    public function __construct(IViewEngine $viewEngine = null)
     {
         $this->_viewEngine = $viewEngine;
     }
@@ -68,7 +69,7 @@ class Response
     public function view(string $viewName)
     {
 
-        if (!$this->_viewEngine || !isset($this->_viewEngine)) throw new Exception("No view Engine resgistered");
+        if (!$this->_viewEngine || !isset($this->_viewEngine)) throw new Exception("No view engine resgistered");
 
 
         return $this->sendHtml($this->_viewEngine->renderView($viewName, $this->_withData ?? []));

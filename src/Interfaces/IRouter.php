@@ -15,5 +15,5 @@ interface IRouter
     public function delete(string $path, ...$handlers) : Router;
     public function all(string $path, ...$handlers) : Router;
     public function match(string $method, string $path);
-    public function registerViews(string $viewsDir) : void;
+    public function registerViews(IViewEngine $viewEngine) : void;
 }
