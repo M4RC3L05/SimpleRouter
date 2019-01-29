@@ -1,3 +1,8 @@
+#2.3.0
+
+-   Response method die no longer exists
+-   Add session attribute to request
+
 #2.2.1
 
 -   Fix exception bug
