@@ -22,28 +22,28 @@ class RouterTest extends TestCase
     {
 
         $router = new Router();
-        $router->get("/get", function ($req, $res) use (&$tmp) {
+        $router->get("/get", function ($req, $res) {
             echo "get";
         });
 
-        $router->post("/post", function ($req, $res) use (&$tmp) {
+        $router->post("/post", function ($req, $res) {
             echo "post";
         });
 
-        $router->put("/put", function ($req, $res) use (&$tmp) {
+        $router->put("/put", function ($req, $res) {
             echo "put";
         });
 
-        $router->patch("/patch", function ($req, $res) use (&$tmp) {
+        $router->patch("/patch", function ($req, $res) {
             echo "patch";
         });
 
-        $router->delete("/delete", function ($req, $res) use (&$tmp) {
+        $router->delete("/delete", function ($req, $res) {
             echo "delete";
         });
 
         $res = $router->match("get", "/get");
-        $this->assertEquals(1, \count($res));
+        $this->assertEquals(2, \count($res));
         \ob_start();
         $fn = $res[0]->getHandler();
         $fn("", "");
@@ -51,7 +51,7 @@ class RouterTest extends TestCase
         $this->assertEquals("get", $res);
 
         $res = $router->match("post", "/post");
-        $this->assertEquals(1, \count($res));
+        $this->assertEquals(2, \count($res));
         \ob_start();
         $fn = $res[0]->getHandler();
         $fn("", "");
@@ -59,7 +59,7 @@ class RouterTest extends TestCase
         $this->assertEquals("post", $res);
 
         $res = $router->match("put", "/put");
-        $this->assertEquals(1, \count($res));
+        $this->assertEquals(2, \count($res));
         \ob_start();
         $fn = $res[0]->getHandler();
         $fn("", "");
@@ -67,7 +67,7 @@ class RouterTest extends TestCase
         $this->assertEquals("put", $res);
 
         $res = $router->match("patch", "/patch");
-        $this->assertEquals(1, \count($res));
+        $this->assertEquals(2, \count($res));
         \ob_start();
         $fn = $res[0]->getHandler();
         $fn("", "");
@@ -75,7 +75,7 @@ class RouterTest extends TestCase
         $this->assertEquals("patch", $res);
 
         $res = $router->match("DELETE", "/delete");
-        $this->assertEquals(1, \count($res));
+        $this->assertEquals(2, \count($res));
         \ob_start();
         $fn = $res[0]->getHandler();
         $fn("", "");
@@ -87,11 +87,11 @@ class RouterTest extends TestCase
     {
 
         $router = new Router();
-        $router->get("/ola", function ($req, $res) use (&$tmp) {
+        $router->get("/ola", function ($req, $res) {
             echo "get";
         });
 
-        $router->use(function ($req, $res) use (&$tmp) {
+        $router->use(function ($req, $res) {
             echo "notfound";
         });
 
@@ -110,17 +110,17 @@ class RouterTest extends TestCase
 
 
         $router
-            ->get("/user/:id", function ($req, $res) use (&$tmp) {
+            ->get("/user/:id", function ($req, $res) {
                 \print_r("/user/:id");
             })
             ->group(
                 "/b/:aaa",
                 function ($r) {
                     $r
-                        ->get("/", function ($req, $res) use (&$tmp) {
+                        ->get("/", function ($req, $res) {
                             \print_r("/b/:aaa");
                         })
-                        ->get("/a", function ($req, $res) use (&$tmp) {
+                        ->get("/a", function ($req, $res) {
                             \print_r("/b/:aaa/a");
                         })
                         ->group(
@@ -133,7 +133,7 @@ class RouterTest extends TestCase
                                     })
                                     ->get(
                                         "/:vvv",
-                                        function ($req, $res) use (&$tmp) {
+                                        function ($req, $res) {
                                             \print_r("/b/:aaa/aa/:vvv");
                                         }
                                     );

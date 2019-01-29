@@ -4,6 +4,7 @@ namespace SimpleRouter\Router;
 
 use function FPPHP\Lists\slice;
 use function FPPHP\Lists\reduce;
+use function FPPHP\Lists\append;
 
 class Router
 {
@@ -16,11 +17,19 @@ class Router
     private const PUT_ROUTE = "PUT";
     private const PATCH_ROUTE = "PATCH";
     private const DELETE_ROUTE = "DELETE";
+    private $ERROR_HANDLER;
+
 
     public function __construct()
     {
         $this->_handlers = [];
         $this->_basePath = "/";
+        $this->ERROR_HANDLER = new Handler(Router::ALL_ROUTE, "/*", function ($error, $req, $res, $next) {
+            return $res->status(500)->sendHtml("
+            <h1>An error ocurr!</h1>
+            <p>{$error}</p>
+            ");
+        }, "/");
     }
 
     private function _isRouterType(string $type) : bool
@@ -59,6 +68,8 @@ class Router
 
         $pathOnly = \parse_url($path)["path"];
 
+        $finalHandlers = append($this->ERROR_HANDLER)($this->_handlers);
+
         return reduce(function ($acc, Handler $curr) use ($verb, $path, $pathOnly) {
             if ($curr->getVerb() !== Router::ALL_ROUTE && $curr->getVerb() !== $verb) return $acc;
 
@@ -69,7 +80,7 @@ class Router
             \array_push($acc, $curr);
 
             return $acc;
-        })([])($this->_handlers);
+        })([])($finalHandlers);
     }
 
     public function use() : Router
