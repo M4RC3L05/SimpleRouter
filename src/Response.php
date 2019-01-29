@@ -7,6 +7,7 @@ class Response
 {
 
     private $_viewEngine;
+    private $_withData;
 
     public function __construct(ViewEngine $viewEngine = null)
     {
@@ -67,10 +68,10 @@ class Response
     public function view(string $viewName)
     {
 
-        if (!$this->_viewEngine) throw new Exception("No view Engine resgistered");
+        if (!$this->_viewEngine || !isset($this->_viewEngine)) throw new Exception("No view Engine resgistered");
 
 
-        return $this->sendHtml($this->_viewEngine->renderView($viewName . ".twig", $this->_widthData));
+        return $this->sendHtml($this->_viewEngine->renderView($viewName, $this->_withData ?? []));
     }
 
     public function withHeaders(array $headers) : Response
@@ -84,7 +85,7 @@ class Response
 
     public function withViewData(array $data) : Response
     {
-        $this->_widthData = $data;
+        $this->_withData = $data;
         return $this;
     }
 
