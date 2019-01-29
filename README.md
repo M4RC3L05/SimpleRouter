@@ -58,7 +58,7 @@ A simple router for php
         // 404 handler (must be the last)
         ->use(function (Request $request, Response $response) {
             return $response->status(404)->sendHtml("404, Not found!");
-        })
+        });
         // ...
         // To handle incomming requests
         $app->handleRequest();
@@ -200,7 +200,7 @@ A simple router for php
     -   Sets the response cookies
 
     ```php
-        public function withCookies(array \$data) : Response
+        public function withCookies(array $data) : Response
     ```
 
     -   Ends the response
