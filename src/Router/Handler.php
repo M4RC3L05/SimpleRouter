@@ -4,7 +4,6 @@ namespace SimpleRouter\Router;
 
 use function FPPHP\Lists\map;
 use function FPPHP\Lists\zipAssoc;
-use function FPPHP\Lists\reverse;
 use function FPPHP\Lists\flatten;
 
 

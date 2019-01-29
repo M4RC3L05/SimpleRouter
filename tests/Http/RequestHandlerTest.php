@@ -3,7 +3,6 @@ namespace Tests\Http;
 
 use PHPUnit\Framework\TestCase;
 use SimpleRouter\Router\Handler;
-use SimpleRouter\Session\SessionManager;
 use SimpleRouter\Http\RequestHandler;
 
 class RequestHandlerTest extends TestCase
@@ -26,8 +25,7 @@ class RequestHandlerTest extends TestCase
             }, "")
         ];
 
-        $sessionHandlerSpy = $this->createMock(SessionManager::class);
-        $re = new RequestHandler(\array_reverse($handlers), "/", $sessionHandlerSpy);
+        $re = new RequestHandler(\array_reverse($handlers), "/");
         \ob_start();
         $re->pipeHandlers();
         $res = \ob_get_clean();
@@ -52,8 +50,7 @@ class RequestHandlerTest extends TestCase
             }, "")
         ];
 
-        $sessionHandlerSpy = $this->createMock(SessionManager::class);
-        $re = new RequestHandler(\array_reverse($handlers), "/", $sessionHandlerSpy);
+        $re = new RequestHandler(\array_reverse($handlers), "/");
         \ob_start();
         $re->pipeHandlers();
         $res = \ob_get_clean();

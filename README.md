@@ -15,22 +15,23 @@ A simple router for php
 2. Import to you code and use
 
     ```php
-        // to use sessions
-        session_start();
-
         // require autoload file
         require_once __DIR__ . '/../vendor/autoload.php';
 
         // Import simple router
-        use SimpleRouter\Router;
-        use SimpleRouter\Response;
-        use SimpleRouter\Request;
+        use SimpleRouter;
+        // Optional (just for intellicence)
+        use SimpleRouter\Http\Request;
+        use SimpleRouter\Http\Response;
 
         // Create a new Router
-        $router = new Router();
+        $app = new SimpleRouter();
+
+        // Register a view engine (see examples folder, optional)
+        $app->registerViewEngine(new ViewEngine())
 
         // especify you routes
-        $router
+        $app->router()
         // Used for middlewares, you have to call
         // next to move to the next middleware
         ->use(function (Request $req, Response $res, callable $next) {
@@ -59,11 +60,25 @@ A simple router for php
             return $response->status(404)->sendHtml("404, Not found!");
         })
         // ...
-        // To match incomming requests
-        ->match($_SERVER["REQUEST_METHOD"], $_SERVER["REQUEST_URI"])
+        // To handle incomming requests
+        $app->handleRequest();
     ```
 
 ## API
+
+-   SimpleRouter
+
+    -   Used to handle incoming requests
+
+    ```php
+        public function handleRequest()
+    ```
+
+    -   Used to register a view template engine (must implement IViewServiceProvider)
+
+    ```php
+        public function registerViewEngine(IViewEngineServiceProvider $engine)
+    ```
 
 -   Router
 
@@ -115,80 +130,12 @@ A simple router for php
         public function match(string $method, string $path)
     ```
 
-    -   Used to register the folder of the views (only php files are suported)
-
-    ```php
-        public function registerViews(string $viewsDir) : void
-    ```
-
 -   Request
 
     -   Paramas - Store the params of the request
     -   Query - Store the query params of the request
     -   Body - Store de body of the request
     -   Files - Store the files sended
-    -   Session - Store session related information
-
-        -   Initializes a new session if not already created
-
-        ```php
-            public function init() : void
-        ```
-
-        -   Set a data to the session
-
-        ```php
-            public function set(string $key, $value, bool $prefix = true) : void
-        ```
-
-        -   Removes data from session
-
-        ```php
-            public function remove(string $key, bool $prefix = true) : void
-        ```
-
-        -   Gets the data from the session
-
-        ```php
-            public function get(string $key, $prefix = true)
-        ```
-
-        -   Destroy all data from session tha has the session prefix
-
-        ```php
-            public function destroyByPrefix() : void
-        ```
-
-        -   Destroy all data from the session
-
-        ```php
-            public function destroyAll() : void
-        ```
-
-        -   Get the session id
-
-        ```php
-            public function id() : string
-        ```
-
-        -   Regenerate a new session
-
-        ```php
-            public function regenerate() : string
-        ```
-
-        -   Get all data from session
-
-        ```php
-            public function getSession() : array
-        ```
-
-        -   Check if the session has already started
-
-        ```php
-            public function is_session_started() : bool
-        ```
-
     -   Request - Store the request information
     -   Headers - Store de headers of the request
     -   Method - Store the type of the method
