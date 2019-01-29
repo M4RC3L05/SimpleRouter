@@ -8,7 +8,7 @@
     ],
     "require": {
         "m4rc3l05/simplerouter": "^2.2.1",
-        "twig/twig": "^2.6"
+        "duncan3dc/blade": "^4.3"
     },
     "autoload": {
         "psr-4": {

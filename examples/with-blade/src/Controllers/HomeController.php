@@ -16,6 +16,6 @@ class HomeController
                     "John"
                 ]
             ])
-            ->view("home/index.twig");
+            ->view("home.index");
     }
 }

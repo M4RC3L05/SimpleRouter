@@ -4,7 +4,7 @@ namespace SimpleRouter;
 
 use SimpleRouter\Router\Router;
 use SimpleRouter\Http\RequestHandler;
-use SimpleRouter\Interfaces\IViewEngineServiceProvider;
+use SimpleRouter\Views\Interfaces\IViewEngineServiceProvider;
 use function FPPHP\Lists\reverse;
 
 

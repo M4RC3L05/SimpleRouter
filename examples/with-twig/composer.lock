@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "48b1d8695119829d9f9bed21b9768166",
+    "content-hash": "ef4931b4bea299c247115cd5decb2a33",
     "packages": [
         {
             "name": "m4rc3l05/fp-php",
@@ -161,16 +161,16 @@
         },
         {
             "name": "m4rc3l05/simplerouter",
-            "version": "2.2.0",
+            "version": "2.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/M4RC3L05/SimpleRouter.git",
-                "reference": "1f0dfbdbd9dc0bc6e2a2597d92d520e904ef7dea"
+                "reference": "59819f72ba55e4d958a58b867a4c9d8500e1a66b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/M4RC3L05/SimpleRouter/zipball/1f0dfbdbd9dc0bc6e2a2597d92d520e904ef7dea",
-                "reference": "1f0dfbdbd9dc0bc6e2a2597d92d520e904ef7dea",
+                "url": "https://api.github.com/repos/M4RC3L05/SimpleRouter/zipball/59819f72ba55e4d958a58b867a4c9d8500e1a66b",
+                "reference": "59819f72ba55e4d958a58b867a4c9d8500e1a66b",
                 "shasum": ""
             },
             "require": {
@@ -202,7 +202,7 @@
                 "php",
                 "router"
             ],
-            "time": "2019-01-29T19:22:44+00:00"
+            "time": "2019-01-29T19:54:56+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",

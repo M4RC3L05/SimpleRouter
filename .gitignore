@@ -16,3 +16,8 @@ resources
 vendor
 a.txt
 cache
+.cache
+
+!examples/**/public
+!examples/**/resources
+examples/**/vendor
