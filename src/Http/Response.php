@@ -69,7 +69,7 @@ class Response
     public function view(string $viewName)
     {
 
-        if (!$this->_viewEngine || !isset($this->_viewEngine)) throw new Exception("No view engine resgistered");
+        if (!$this->_viewEngine || !isset($this->_viewEngine)) throw new \Exception("No view engine resgistered");
 
 
         return $this->sendHtml($this->_viewEngine->renderView($viewName, $this->_withData ?? []));
