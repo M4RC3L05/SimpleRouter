@@ -1,6 +1,6 @@
 <?php
 
-namespace SimpleRouter;
+namespace SimpleRouter\Http;
 
 use SimpleRouter\Interfaces\IViewEngine;
 

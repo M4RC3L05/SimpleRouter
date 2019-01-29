@@ -21,7 +21,7 @@ class RouterTest extends TestCase
     public function test_it_should_match_routes()
     {
 
-        $router = new Router("app.com");
+        $router = new Router();
         $router->get("/get", function ($req, $res) use (&$tmp) {
             echo "get";
         });
@@ -55,7 +55,7 @@ class RouterTest extends TestCase
     public function test_it_should_display_not_found_path_if_path_not_exists()
     {
 
-        $router = new Router("app.com");
+        $router = new Router();
         $router->get("/ola", function ($req, $res) use (&$tmp) {
             echo "get";
         });
@@ -72,7 +72,7 @@ class RouterTest extends TestCase
 
     public function test_it_should_match_routes_with_params_and_return_them_as_response_params()
     {
-        $router = new Router("app.com");
+        $router = new Router();
 
         $router->get("/user/:id", function ($req, $res) use (&$tmp) {
             echo $req->params["id"];
@@ -109,7 +109,7 @@ class RouterTest extends TestCase
     public function test_it_should_create_groups_routes()
     {
 
-        $router = new Router("app.com");
+        $router = new Router();
 
 
         $router

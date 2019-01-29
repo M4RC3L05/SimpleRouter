@@ -1,24 +1,14 @@
 <?php
 
-namespace SimpleRouter;
+namespace SimpleRouter\Router;
 
-use SimpleRouter\Response;
-use SimpleRouter\Types\IResponse;
-use SimpleRouter\Interfaces\IHandler;
-use SimpleRouter\Interfaces\IRouter;
-use SimpleRouter\Interfaces\IViewEngine;
-use SimpleRouter\Handler;
 use function FPPHP\Lists\slice;
 use function FPPHP\Lists\reduce;
-use function FPPHP\Lists\reverse;
 
-class Router implements IRouter
+class Router
 {
     private $_handlers;
-    private $_sessionManager;
     private $_basePath;
-    private $_hostname;
-    private $_viewEngine;
 
     private const ALL_ROUTE = "ALL_ROUTE";
     private const GET_ROUTE = "GET";
@@ -27,16 +17,10 @@ class Router implements IRouter
     private const PATCH_ROUTE = "PATCH";
     private const DELETE_ROUTE = "DELETE";
 
-    public function __construct(string $hostname = null, string $basePath = "/")
+    public function __construct()
     {
         $this->_handlers = [];
-        $this->_sessionManager = new SessionManager();
-        if ($hostname) {
-            $this->_hostname = $hostname;
-        } else {
-            $this->_hostname = $_SERVER["HTTP_HOST"] ?? $_SERVER["SERVER_NAME"] ?? "";
-        }
-        $this->_basePath = $basePath;
+        $this->_basePath = "/";
     }
 
     private function _isRouterType(string $type) : bool
@@ -68,14 +52,14 @@ class Router implements IRouter
 
     }
 
-    private function _innerMath(string $hostname, string $method, string $path)
+    private function _innerMath(string $hostname, string $method, string $path) : array
     {
 
         $verb = \strtoupper($method);
 
         $pathOnly = \parse_url($path)["path"];
 
-        $handlers = reduce(function ($acc, IHandler $curr) use ($verb, $path, $pathOnly) {
+        return reduce(function ($acc, Handler $curr) use ($verb, $path, $pathOnly) {
             if ($curr->getVerb() !== Router::ALL_ROUTE && $curr->getVerb() !== $verb) return $acc;
 
             if (!$curr->match($pathOnly)) return $acc;
@@ -86,8 +70,6 @@ class Router implements IRouter
 
             return $acc;
         })([])($this->_handlers);
-
-        return (new RequestHandler(reverse($handlers), $pathOnly, $this->_sessionManager, $this->_viewEngine))->pipeHandlers();
     }
 
     public function use() : Router
@@ -161,13 +143,8 @@ class Router implements IRouter
         return $this;
     }
 
-    public function match(string $method, string $path)
+    public function match(string $method, string $path) : array
     {
         return $this->_innerMath($this->_basePath, $method, $path);
-    }
-
-    public function registerViews(IViewEngine $viewEngine) : void
-    {
-        $this->_viewEngine = $viewEngine;
     }
 }

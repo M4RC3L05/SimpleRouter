@@ -1,9 +1,10 @@
 <?php
 
-namespace SimpleRouter;
+namespace SimpleRouter\Http;
 
-use SimpleRouter\Interfaces\IHandler;
 use SimpleRouter\Interfaces\IViewEngine;
+use SimpleRouter\Session\SessionManager;
+use SimpleRouter\Router\Handler;
 
 
 class RequestHandler
@@ -22,7 +23,7 @@ class RequestHandler
         $this->_response = new Response($viewEngine);
     }
 
-    private function _getProperHandler(IHandler $handlerWrapper)
+    private function _getProperHandler(Handler $handlerWrapper)
     {
         $handler = $handlerWrapper->getHandler();
 

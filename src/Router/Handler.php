@@ -1,15 +1,14 @@
 <?php
 
-namespace SimpleRouter;
+namespace SimpleRouter\Router;
 
-use SimpleRouter\Interfaces\IHandler;
 use function FPPHP\Lists\map;
 use function FPPHP\Lists\zipAssoc;
 use function FPPHP\Lists\reverse;
 use function FPPHP\Lists\flatten;
 
 
-class Handler implements IHandler
+class Handler
 {
 
     private $_verb;

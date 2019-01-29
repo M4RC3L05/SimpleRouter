@@ -1,6 +1,6 @@
 <?php
 
-namespace SimpleRouter;
+namespace SimpleRouter\Session;
 
 class SessionManager
 {
@@ -11,7 +11,7 @@ class SessionManager
         $this->init();
     }
 
-    public function init() : void
+    private function init() : void
     {
         if (!$this->is_session_started()) {
             session_start();
