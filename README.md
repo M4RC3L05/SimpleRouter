@@ -140,6 +140,7 @@ A simple router for php
     -   Headers - Store de headers of the request
     -   Method - Store the type of the method
     -   Server - Store server related information
+    -   Custom - Stores custom data the is set on the request
 
 -   Response
 

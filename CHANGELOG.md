@@ -1,3 +1,7 @@
+#2.1.1
+
+-   Update custom data from "data" to "custom" on request
+
 # 2.1.0
 
 -   Ability to set custom data on the request object
