@@ -208,9 +208,3 @@ A simple router for php
     ```php
         public function withCookies(array $data) : Response
     ```
-
-    -   Ends the response
-
-    ```php
-        public function end() : void
-    ```

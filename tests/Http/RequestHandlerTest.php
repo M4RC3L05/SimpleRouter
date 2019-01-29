@@ -9,7 +9,6 @@ class RequestHandlerTest extends TestCase
 {
     public function test_it_should_pipe_request_response_and_next_into_handlers()
     {
-
         $handlers = [
             new Handler("get", "/", function ($req, $res, $next) use (&$a) {
                 echo "1";
@@ -34,8 +33,6 @@ class RequestHandlerTest extends TestCase
 
     public function test_it_should_not_pipe_request_response_and_next_if_next_is_not_called()
     {
-
-
         $handlers = [
             new Handler("get", "/", function ($req, $res, $next) use (&$a) {
                 echo "1";
