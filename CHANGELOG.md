@@ -1,3 +1,7 @@
+#2.2.1
+
+-   Fix exception bug
+
 #2.2.0
 
 -   Implement error handling route
