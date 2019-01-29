@@ -2,7 +2,7 @@
 
 namespace SimpleRouter\Http;
 
-use SimpleRouter\Interfaces\IViewEngine;
+use SimpleRouter\Views\Interfaces\IViewEngineServiceProvider;
 
 class Response
 {
@@ -10,7 +10,7 @@ class Response
     private $_viewEngine;
     private $_withData;
 
-    public function __construct(IViewEngine $viewEngine = null)
+    public function __construct(IViewEngineServiceProvider $viewEngine = null)
     {
         $this->_viewEngine = $viewEngine;
     }

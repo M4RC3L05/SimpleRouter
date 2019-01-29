@@ -2,7 +2,7 @@
 
 namespace SimpleRouter\Http;
 
-use SimpleRouter\Session\SessionManager;
+use SimpleRouter\Session\Interfaces\ISessionServiceProvider;
 
 
 class Request
@@ -18,7 +18,7 @@ class Request
     public $method;
     public $server;
 
-    public function __construct(array $params = [], SessionManager $session)
+    public function __construct(array $params = [], ISessionServiceProvider $session)
     {
         $this->params = isset($params) ? $params : [];
         $this->query = isset($_GET) ? $_GET : [];

@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests;
+namespace Tests\Session;
 
 use PHPUnit\Framework\TestCase;
-use SimpleRouter\SessionManager;
+use SimpleRouter\Session\SessionManager;
 
 
 class SessionManagerTest extends TestCase

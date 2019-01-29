@@ -1,8 +1,8 @@
 <?php
 
-namespace SimpleRouter\Interfaces;
+namespace SimpleRouter\Views\Interfaces;
 
-interface IViewEngine
+interface IViewEngineServiceProvider
 {
     public function renderView(string $viewPath, array $data = []);
 }

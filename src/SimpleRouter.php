@@ -2,11 +2,12 @@
 
 namespace SimpleRouter;
 
-use SimpleRouter\Interfaces\IViewEngine;
 use SimpleRouter\Router\Router;
+use SimpleRouter\Http\RequestHandler;
+use SimpleRouter\Session\Interfaces\ISessionServiceProvider;
+use SimpleRouter\Interfaces\IViewEngineServiceProvider;
 use SimpleRouter\Session\SessionManager;
 use function FPPHP\Lists\reverse;
-use SimpleRouter\Http\RequestHandler;
 
 
 class SimpleRouter
@@ -34,8 +35,13 @@ class SimpleRouter
         return (new RequestHandler(reverse($handlers), $pathOnly, $this->_sessionManager, $this->_viewEngine))->pipeHandlers();
     }
 
-    public function registerViewEngine(IViewEngine $engine)
+    public function registerViewEngine(IViewEngineServiceProvider $engine)
     {
         $this->_viewEngine = $engine;
+    }
+
+    public function registerSessionManager(ISessionServiceProvider $sm)
+    {
+        $this->_sessionManager = $sm;
     }
 }

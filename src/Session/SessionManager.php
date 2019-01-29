@@ -2,7 +2,10 @@
 
 namespace SimpleRouter\Session;
 
-class SessionManager
+use SimpleRouter\Session\Interfaces\ISessionServiceProvider;
+
+
+class SessionManager implements ISessionServiceProvider
 {
     private const PREFIX = "sr_session@@";
 

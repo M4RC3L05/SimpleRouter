@@ -1,11 +1,12 @@
 <?php
 
-namespace Tests;
+namespace Tests\Http;
 
 
 use PHPUnit\Framework\TestCase;
-use SimpleRouter\Request;
-use SimpleRouter\SessionManager;
+use SimpleRouter\Session\SessionManager;
+use SimpleRouter\Http\Request;
+
 
 class RequestTest extends TestCase
 {

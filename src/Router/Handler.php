@@ -16,11 +16,12 @@ class Handler
     private $_pathOriginal;
     private $_handler;
     private $_pathParams;
+    private $_populatedPathParams;
     private $_basePath;
 
     public function __construct(string $_verb, string $pathOriginal, $handler, string $basePath)
     {
-        $this->_verb = $_verb;
+        $this->_verb = \strtoupper($_verb);
         $this->_handler = $handler;
         $this->_basePath = $basePath;
         $this->_pathOriginal = $this->_formatPath($pathOriginal);
@@ -39,7 +40,7 @@ class Handler
 
     public function populatePathParams(string $path)
     {
-        if (\count($this->_pathParams) <= 0) return $this->_pathParams;
+        if (\count($this->_pathParams) <= 0) return $this->_populatedPathParams;
 
         $paramData = [];
 
@@ -48,12 +49,14 @@ class Handler
         \array_shift($paramData);
         $paramData = flatten($paramData);
 
-        $this->_pathParams = zipAssoc($this->_pathParams)($paramData);
+        if (\count($paramData) <= 0) return $this->_populatedPathParams;
+
+        $this->_populatedPathParams = zipAssoc($this->_pathParams)($paramData);
     }
 
     public function getPathParams() : array
     {
-        return $this->_pathParams;
+        return $this->_populatedPathParams;
     }
 
     public function getPath() : string
@@ -98,8 +101,6 @@ class Handler
             return;
         }
 
-
-
         $matchesToRouteParams = [];
         $pathParams = \preg_match_all("/\/\:[A-Za-z0-9_]+/", $this->_pathOriginal, $matchesToRouteParams);
 
@@ -112,6 +113,7 @@ class Handler
         }
 
         $this->_pathRegex = "/^" . \preg_replace(["/\//", "/\/\:[A-Za-z0-9_]+/", "/\/\*/"], ["\/", "/([^\/]+?)", "/*.*"], $this->_pathOriginal) . "?$/";
+        $this->_populatedPathParams = $this->_pathParams;
     }
 }
     

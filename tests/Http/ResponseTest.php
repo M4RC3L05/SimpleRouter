@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests;
+namespace Tests\Http;
 
 use PHPUnit\Framework\TestCase;
-use SimpleRouter\Response;
-use SimpleRouter\ViewEngine;
+use SimpleRouter\Http\Response;
+
 
 
 class ResponseTest extends TestCase

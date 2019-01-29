@@ -2,9 +2,9 @@
 
 namespace SimpleRouter\Http;
 
-use SimpleRouter\Interfaces\IViewEngine;
-use SimpleRouter\Session\SessionManager;
 use SimpleRouter\Router\Handler;
+use SimpleRouter\Views\Interfaces\IViewEngineServiceProvider;
+use SimpleRouter\Session\Interfaces\ISessionServiceProvider;
 
 
 class RequestHandler
@@ -14,7 +14,7 @@ class RequestHandler
     private $_request;
     private $_response;
 
-    public function __construct(array $handlers, string $currPath, SessionManager $sessionManager, IViewEngine $viewEngine = null)
+    public function __construct(array $handlers, string $currPath, ISessionServiceProvider $sessionManager, IViewEngineServiceProvider $viewEngine = null)
     {
 
         $this->_handlers = $handlers;
