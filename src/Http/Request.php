@@ -14,6 +14,7 @@ class Request
     public $headers;
     public $method;
     public $server;
+    public $data;
 
     public function __construct()
     {
@@ -26,5 +27,11 @@ class Request
         $this->headers = \function_exists("getallheaders") ? \getallheaders() : [];
         $this->method = $_SERVER["REQUEST_METHOD"] ?? "";
         $this->server = isset($_SERVER) ? $_SERVER : [];
+        $this->data = [];
+    }
+
+    public function set(string $key, $value)
+    {
+        $this->data[$key] = $value;
     }
 }
