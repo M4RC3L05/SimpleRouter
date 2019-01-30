@@ -7,12 +7,10 @@ namespace Tests\Http;
 
 use PHPUnit\Framework\TestCase;
 use SimpleRouter\SimpleRouter;
-use phpmock\MockBuilder;
 
 
 class SimpleRouterTest extends TestCase
 {
-    use \phpmock\phpunit\PHPMock;
 
     public function test_it_should_create_a_new_simple_router_object()
     {
