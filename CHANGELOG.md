@@ -1,3 +1,7 @@
+#2.3.1
+
+-   Fix Tests
+
 #2.3.0
 
 -   Response method die no longer exists
