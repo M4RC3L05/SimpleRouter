@@ -1,3 +1,7 @@
+#2.4.0
+
+-   Now, call withViewData will appends the provided data insted of replace
+
 #2.3.2
 
 -   Fix bug when no handlers the app craches
