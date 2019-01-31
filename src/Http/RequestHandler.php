@@ -58,14 +58,26 @@ class RequestHandler
 
             if ($this->_errorOcurr)
                 return (new $class)->$method($this->_error, $this->_request, $this->_response, $next);
-            else
+            else {
+                $numArgs = (new \ReflectionFunction(\Closure::fromCallable([new $class, $method])))->getNumberOfRequiredParameters();
+
+                if ($numArgs > 3) return $next();
+
                 return (new $class)->$method($this->_request, $this->_response, $next);
+            }
         } else {
+
+
 
             if ($this->_errorOcurr) {
                 return $properHandler($this->_error, $this->_request, $this->_response, $next);
-            } else
+            } else {
+                $numArgs = (new \ReflectionFunction(\Closure::fromCallable($properHandler)))->getNumberOfRequiredParameters();
+
+                if ($numArgs > 3) return $next();
+
                 return $properHandler($this->_request, $this->_response, $next);
+            }
         }
     }
 

@@ -81,4 +81,20 @@ class SimpleRouterTest extends TestCase
         $res = \ob_get_clean();
         $this->assertStringStartsWith("<h1>An error ocurr!</h1>", \trim(\str_replace(["\r", "\n"], "", $res)));
     }
+
+    public function test_it_should_handle_requests_without_handlers()
+    {
+        try {
+            $app = new SimpleRouter();
+
+            $_SERVER["REQUEST_METHOD"] = "GET";
+            $_SERVER["REQUEST_URI"] = "/next";
+
+            $app->handleRequest();
+            $this->assertTrue(true);
+
+        } catch (\Exception $e) {
+            $this->assertTrue(false);
+        }
+    }
 }

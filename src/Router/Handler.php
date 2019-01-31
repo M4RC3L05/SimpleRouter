@@ -77,6 +77,8 @@ class Handler
     {
         $finalPath = $path;
 
+        if ($finalPath === "") $finalPath = "/";
+
         if ($this->_basePath === "/")
             $finalPath = $finalPath = $path;
 

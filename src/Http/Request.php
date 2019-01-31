@@ -29,6 +29,5 @@ class Request
         $this->method = $_SERVER["REQUEST_METHOD"] ?? "";
         $this->server = isset($_SERVER) ? $_SERVER : [];
         $this->custom = [];
-        $this->session = $_SESSION ?? [];
     }
 }

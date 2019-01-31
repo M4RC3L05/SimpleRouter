@@ -12,30 +12,25 @@ class Router
     private $_basePath;
 
     private const ALL_ROUTE = "ALL_ROUTE";
+    private const MIDDLEWARE = "MIDDLEWARE";
     private const GET_ROUTE = "GET";
     private const POST_ROUTE = "POST";
     private const PUT_ROUTE = "PUT";
     private const PATCH_ROUTE = "PATCH";
     private const DELETE_ROUTE = "DELETE";
-    private $ERROR_HANDLER;
 
 
     public function __construct()
     {
         $this->_handlers = [];
         $this->_basePath = "/";
-        $this->ERROR_HANDLER = new Handler(Router::ALL_ROUTE, "/*", function ($error, $req, $res, $next) {
-            return $res->status(500)->sendHtml("
-            <h1>An error ocurr!</h1>
-            <p>{$error}</p>
-            ");
-        }, "/");
     }
 
     private function _isRouterType(string $type) : bool
     {
         switch ($type) {
             case Router::ALL_ROUTE:
+            case Router::MIDDLEWARE:
             case Router::GET_ROUTE:
             case Router::POST_ROUTE:
             case Router::GET_ROUTE:
@@ -68,12 +63,28 @@ class Router
 
         $pathOnly = \parse_url($path)["path"];
 
-        $finalHandlers = append($this->ERROR_HANDLER)($this->_handlers);
+        $finalHandlers = append(new Handler(Router::MIDDLEWARE, "/*", function ($error, $req, $res, $next) {
+            return $res->status(500)->sendHtml("
+            <h1>An error ocurr!</h1>
+            <p>{$error}</p>
+            ");
+        }, "/"))($this->_handlers);
+
 
         return reduce(function ($acc, Handler $curr) use ($verb, $path, $pathOnly) {
-            if ($curr->getVerb() !== Router::ALL_ROUTE && $curr->getVerb() !== $verb) return $acc;
 
             if (!$curr->match($pathOnly)) return $acc;
+
+            if ($curr->getVerb() === Router::MIDDLEWARE || $curr->getVerb() === Router::ALL_ROUTE) {
+
+                $curr->populatePathParams($pathOnly);
+
+                \array_push($acc, $curr);
+
+                return $acc;
+            }
+
+            if ($curr->getVerb() !== $verb) return $acc;
 
             $curr->populatePathParams($pathOnly);
 
@@ -96,7 +107,7 @@ class Router
             $handlers = $args;
         }
 
-        $this->_innerRegisterHandlers(Router::ALL_ROUTE, $path, $handlers);
+        $this->_innerRegisterHandlers(Router::MIDDLEWARE, $path, $handlers);
 
         return $this;
     }
