@@ -1,3 +1,8 @@
+#2.3.2
+
+-   Fix bug when no handlers the app craches
+-   Remove session from request
+
 #2.3.1
 
 -   Fix Tests
