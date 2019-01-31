@@ -3,6 +3,7 @@
 namespace SimpleRouter\Http;
 
 use SimpleRouter\Views\Interfaces\IViewEngineServiceProvider;
+use function FPPHP\Lists\mergeAll;
 
 class Response
 {
@@ -90,7 +91,7 @@ class Response
 
     public function withViewData(array $data) : Response
     {
-        $this->_withData = $data;
+        $this->_withData = \array_merge(($this->_withData ?? []), $data);
         return $this;
     }
 

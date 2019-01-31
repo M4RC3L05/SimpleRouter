@@ -5,6 +5,7 @@ namespace Tests\Http;
 
 use PHPUnit\Framework\TestCase;
 use SimpleRouter\SimpleRouter;
+use SimpleRouter\Views\Interfaces\IViewEngineServiceProvider;
 
 
 class SimpleRouterTest extends TestCase
@@ -96,5 +97,35 @@ class SimpleRouterTest extends TestCase
         } catch (\Exception $e) {
             $this->assertTrue(false);
         }
+    }
+
+    public function test_it_should_append_the_data_to_the_views()
+    {
+        $app = new SimpleRouter();
+        $app->registerViewEngine(new class implements IViewEngineServiceProvider
+        {
+            public function renderView(string $viewPath, array $data = [])
+            {
+                return \json_encode($data);
+            }
+        }
+        );
+
+        $app->router()
+            ->use(function ($req, $res, $next) {
+                $res->withViewData(["use" => "use"]);
+                $next();
+            })
+            ->get("/", function ($req, $res) {
+                return $res->withViewData(["/" => "/"])->view("");
+            });
+
+        $_SERVER["REQUEST_METHOD"] = "GET";
+        $_SERVER["REQUEST_URI"] = "/";
+
+        \ob_start();
+        $app->handleRequest();
+        $res = \ob_get_clean();
+        $this->assertEquals("{\"use\":\"use\",\"\/\":\"\/\"}", $res);
     }
 }
