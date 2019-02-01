@@ -1,3 +1,8 @@
+#2.4.1
+
+-   Makes the error string passes on the next callback creates an expeption
+-   bug fixes
+
 #2.4.0
 
 -   Now, call withViewData will appends the provided data insted of replace
