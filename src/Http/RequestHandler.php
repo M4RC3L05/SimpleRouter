@@ -43,9 +43,9 @@ class RequestHandler
     private function _dispatch($properHandler)
     {
 
-        $next = (function ($err = null) {
+        $next = (function (string $err = null) {
             if (isset($err) && !is_null($err)) {
-                $this->onError($err);
+                $this->onError(new \Exception($err));
                 return $this->pipeHandlers();
             } else {
                 return $this->pipeHandlers();
@@ -90,8 +90,6 @@ class RequestHandler
         $now = array_pop($this->_handlers);
 
         $properHandler = $this->_getProperHandler($now);
-
-
 
         if (!isset($properHandler) || \is_null($properHandler)) return $this->pipeHandlers();
 

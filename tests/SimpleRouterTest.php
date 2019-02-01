@@ -25,7 +25,7 @@ class SimpleRouterTest extends TestCase
     {
         $app = new SimpleRouter();
         $app->router()
-            ->get("/", function ($req, $res) {
+            ->get("", function ($req, $res) {
                 throw new \Exception("err");
             })
             ->get("/next", function ($req, $res, $next) {
@@ -38,19 +38,7 @@ class SimpleRouterTest extends TestCase
         \ob_start();
         $app->handleRequest();
         $res = \ob_get_clean();
-        $this->assertStringStartsWith("<h1>An error ocurr!</h1>", \trim(\str_replace(["\r", "\n"], "", $res)));
-
-        $app = new SimpleRouter();
-        $app->router()
-            ->get("/", function ($req, $res) {
-                throw new \Exception("err");
-            })
-            ->get("/next", function ($req, $res, $next) {
-                return $next("err2");
-            })
-            ->use(function ($err, $req, $res, $next) {
-                return $res->status(500)->sendHtml("custom error");
-            });
+        $this->assertStringStartsWith("<h1>Anerrorocurr!</h1><p>Exception:err", \trim(\str_replace(["\r", "\n", " "], "", $res)));
 
         $_SERVER["REQUEST_METHOD"] = "GET";
         $_SERVER["REQUEST_URI"] = "/next";
@@ -58,29 +46,19 @@ class SimpleRouterTest extends TestCase
         \ob_start();
         $app->handleRequest();
         $res = \ob_get_clean();
-        $this->assertEquals("custom error", \trim(\str_replace(["\r", "\n"], "", $res)));
-
-        $app = new SimpleRouter();
-        $app->router()
-            ->get("/", function ($req, $res) {
-                throw new \Exception("err");
-            })
-            ->get("/next", function ($req, $res, $next) {
-                return $next("err2");
-            })
-            ->use(function ($err, $req, $res, $next) {
-                throw new \Exception("Error Processing Request", 1);
-
-                return $res->status(500)->sendHtml("custom error");
-            });
+        $this->assertStringStartsWith("<h1>Anerrorocurr!</h1><p>Exception:err2", \trim(\str_replace(["\r", "\n", " "], "", $res)));
 
         $_SERVER["REQUEST_METHOD"] = "GET";
         $_SERVER["REQUEST_URI"] = "/next";
 
+        $app->router()->use(function ($err, $req, $res, $next) {
+            return $res->sendHtml("custom{$err}");
+        });
         \ob_start();
         $app->handleRequest();
         $res = \ob_get_clean();
-        $this->assertStringStartsWith("<h1>An error ocurr!</h1>", \trim(\str_replace(["\r", "\n"], "", $res)));
+        $this->assertStringStartsWith("customException:err2", \trim(\str_replace(["\r", "\n", " "], "", $res)));
+
     }
 
     public function test_it_should_handle_requests_without_handlers()
