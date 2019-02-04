@@ -1,3 +1,11 @@
+#2.5.0
+
+-   Add method to so that handlers can be register to specifique
+    group of methods
+-   Making set custom data to the request object possible by using
+    the magic methods **set and **get
+-   updating dependencies versions
+
 #2.4.1
 
 -   Makes the error string passes on the next callback creates an expeption

@@ -31,7 +31,8 @@ A simple router for php
         $app->registerViewEngine(new ViewEngine())
 
         // especify you routes
-        $app->router()
+        // $app->router() ou jus call the method on the $app
+        $app
         // Used for middlewares, you have to call
         // next to move to the next middleware
         ->use(function (Request $req, Response $res, callable $next) {
@@ -54,6 +55,10 @@ A simple router for php
                     // Send a file
                     return $res->sendFile("./a.txt");
                 });
+        })
+        // Used to bind the handler to goups of methods
+        ->to(["get", "post"], function (Request $req, Response $res, callable $next) {
+            return $res->sendHtml("hello");
         })
         // 404 handler (must be the last)
         ->use(function (Request $request, Response $response) {
@@ -84,6 +89,8 @@ A simple router for php
     ```php
         public function registerViewEngine(IViewEngineServiceProvider $engine)
     ```
+
+    -   All the methods from router are also available here
 
 -   Router
 
@@ -145,7 +152,7 @@ A simple router for php
     -   Headers - Store de headers of the request
     -   Method - Store the type of the method
     -   Server - Store server related information
-    -   Custom - Stores custom data the is set on the request
+    -   \* - Can set data to any property
 
 -   Response
 
