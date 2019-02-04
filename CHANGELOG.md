@@ -1,4 +1,4 @@
-#2.5.0
+#2.5.1
 
 -   Add method to so that handlers can be register to specifique
     group of methods
