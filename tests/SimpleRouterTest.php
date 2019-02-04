@@ -126,6 +126,9 @@ class SimpleRouterTest extends TestCase
             ->get("/", function ($req, $res) {
                 return $res->withViewData(["/" => "/"])->view("");
             })
+            ->all("/", function ($req, $res) {
+                return $res->withViewData(["/" => "/"])->view("");
+            })
             ->post("/", function ($req, $res) {
                 return $res->withViewData(["/" => "/"])->view("");
             })

@@ -178,4 +178,48 @@ class RouterTest extends TestCase
         $res = \ob_get_clean();
         $this->assertEquals("mid for /b/:aaa/aa/b/:aaa/aa/:vvv", $res);
     }
+
+    public function test_it_should_map_to_an_array_of_methods()
+    {
+        $router = new Router();
+
+        $router->to(["get", "post"], "/", function ($req, $res, $next) {
+            echo "mmm";
+            $next();
+        }, function ($req, $res) {
+            echo "oi";
+        });
+
+
+        $handlers = $router->match("get", "/");
+        $this->assertEquals(\count($handlers), 3);
+        \ob_start();
+        $handlers[0]->getHandler()(" ", " ", function () {
+        });
+        $res = \ob_get_clean();
+        $this->assertEquals($res, "mmm");
+
+        \ob_start();
+        $handlers[1]->getHandler()(" ", " ", function () {
+        });
+        $res = \ob_get_clean();
+        $this->assertEquals($res, "oi");
+
+        $handlers = $router->match("post", "/");
+        $this->assertEquals(\count($handlers), 3);
+        \ob_start();
+        $handlers[0]->getHandler()(" ", " ", function () {
+        });
+        $res = \ob_get_clean();
+        $this->assertEquals($res, "mmm");
+
+        \ob_start();
+        $handlers[1]->getHandler()(" ", " ", function () {
+        });
+        $res = \ob_get_clean();
+        $this->assertEquals($res, "oi");
+
+        $handlers = $router->match("delete", "/");
+        $this->assertEquals(\count($handlers), 1);
+    }
 }

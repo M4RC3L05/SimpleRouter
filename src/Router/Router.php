@@ -165,6 +165,15 @@ class Router
         return $this;
     }
 
+    public function to(array $methods, string $path, ...$handlers) : Router
+    {
+        foreach ($methods as $method) {
+            $this->_innerRegisterHandlers(\strtoupper($method), $path, $handlers);
+        }
+
+        return $this;
+    }
+
     public function match(string $method, string $path) : array
     {
         return $this->_innerMath($this->_basePath, $method, $path);
