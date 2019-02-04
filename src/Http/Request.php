@@ -5,7 +5,7 @@ namespace SimpleRouter\Http;
 
 class Request
 {
-    private $_extra;
+    private $_extras;
     public $params;
     public $query;
     public $body;
@@ -28,6 +28,18 @@ class Request
         $this->headers = \function_exists("getallheaders") ? \getallheaders() : [];
         $this->method = $_SERVER["REQUEST_METHOD"] ?? "";
         $this->server = isset($_SERVER) ? $_SERVER : [];
-        $this->_extra = [];
+        $this->_extras = [];
+    }
+
+    public function __get($name)
+    {
+        if (!\array_key_exists($name, $this->_extras)) return null;
+
+        return $this->_extras[$name];
+    }
+
+    public function __set($name, $value)
+    {
+        $this->_extras[$name] = $value;
     }
 }

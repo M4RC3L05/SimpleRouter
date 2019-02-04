@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3ce095891bce5cb32efad6e00d4396cb",
+    "content-hash": "b71f59a61390c30b3b295d2fa814aa77",
     "packages": [
         {
             "name": "m4rc3l05/fp-php",
-            "version": "0.1.2",
+            "version": "0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/M4RC3L05/fp-php.git",
-                "reference": "a3b7673a00b899b3ffa0fe379324a66bef60502f"
+                "reference": "a1401e8b7f12d090578b0891ccaeda734f74c180"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/M4RC3L05/fp-php/zipball/a3b7673a00b899b3ffa0fe379324a66bef60502f",
-                "reference": "a3b7673a00b899b3ffa0fe379324a66bef60502f",
+                "url": "https://api.github.com/repos/M4RC3L05/fp-php/zipball/a1401e8b7f12d090578b0891ccaeda734f74c180",
+                "reference": "a1401e8b7f12d090578b0891ccaeda734f74c180",
                 "shasum": ""
             },
             "require": {
@@ -30,15 +30,7 @@
             "autoload": {
                 "files": [
                     "src/utils/isAssoc.php",
-                    "src/functions/compose.php",
-                    "src/functions/curry.php",
-                    "src/functions/memoize.php",
-                    "src/functions/pipe.php",
-                    "src/functions/partial.php",
-                    "src/functions/partialRight.php",
                     "src/lists/forevery.php",
-                    "src/lists/some.php",
-                    "src/lists/every.php",
                     "src/lists/reduce.php",
                     "src/lists/last.php",
                     "src/lists/take.php",
@@ -53,7 +45,6 @@
                     "src/lists/chain.php",
                     "src/lists/concat.php",
                     "src/lists/aperture.php",
-                    "src/lists/contains.php",
                     "src/lists/drop.php",
                     "src/lists/dropLast.php",
                     "src/lists/dropLastWhile.php",
@@ -137,7 +128,13 @@
                     "src/functions/apply.php",
                     "src/functions/applySpec.php",
                     "src/functions/applyTo.php",
-                    "src/functions/ascend.php"
+                    "src/functions/ascend.php",
+                    "src/functions/compose.php",
+                    "src/functions/curry.php",
+                    "src/functions/memoize.php",
+                    "src/functions/pipe.php",
+                    "src/functions/partial.php",
+                    "src/functions/partialRight.php"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -157,7 +154,7 @@
                 "functional programming",
                 "php"
             ],
-            "time": "2019-01-25T19:02:24+00:00"
+            "time": "2019-02-01T20:12:27+00:00"
         }
     ],
     "packages-dev": [
