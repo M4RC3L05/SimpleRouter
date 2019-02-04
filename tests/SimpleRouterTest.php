@@ -106,4 +106,45 @@ class SimpleRouterTest extends TestCase
         $res = \ob_get_clean();
         $this->assertEquals("{\"use\":\"use\",\"\/\":\"\/\"}", $res);
     }
+
+    public function test_it_should_allow_to_call_router_methods_directlly_from_SimpleRouter()
+    {
+        $app = new SimpleRouter();
+        $app->registerViewEngine(new class implements IViewEngineServiceProvider
+        {
+            public function renderView(string $viewPath, array $data = [])
+            {
+                return \json_encode($data);
+            }
+        }
+        );
+        $app
+            ->use(function ($req, $res, $next) {
+                $res->withViewData(["use" => "use"]);
+                $next();
+            })
+            ->get("/", function ($req, $res) {
+                return $res->withViewData(["/" => "/"])->view("");
+            })
+            ->post("/", function ($req, $res) {
+                return $res->withViewData(["/" => "/"])->view("");
+            })
+            ->put("/", function ($req, $res) {
+                return $res->withViewData(["/" => "/"])->view("");
+            })
+            ->delete("/", function ($req, $res) {
+                return $res->withViewData(["/" => "/"])->view("");
+            })
+            ->patch("/", function ($req, $res) {
+                return $res->withViewData(["/" => "/"])->view("");
+            });
+
+        $_SERVER["REQUEST_METHOD"] = "GET";
+        $_SERVER["REQUEST_URI"] = "/";
+
+        \ob_start();
+        $app->handleRequest();
+        $res = \ob_get_clean();
+        $this->assertEquals("{\"use\":\"use\",\"\/\":\"\/\"}", $res);
+    }
 }

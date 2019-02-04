@@ -36,4 +36,11 @@ class SimpleRouter
     {
         $this->_viewEngine = $engine;
     }
+
+    public function __call($name, $arguments)
+    {
+        if (!\method_exists($this->_router, $name)) throw new \Exception("Could not call method {$name}");
+
+        return \call_user_func_array([$this->_router, $name], $arguments);
+    }
 }
