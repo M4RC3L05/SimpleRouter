@@ -5,6 +5,7 @@ namespace SimpleRouter\Http;
 
 class Request
 {
+    private $_extra;
     public $params;
     public $query;
     public $body;
@@ -14,7 +15,6 @@ class Request
     public $headers;
     public $method;
     public $server;
-    public $custom;
 
 
     public function __construct()
@@ -28,6 +28,6 @@ class Request
         $this->headers = \function_exists("getallheaders") ? \getallheaders() : [];
         $this->method = $_SERVER["REQUEST_METHOD"] ?? "";
         $this->server = isset($_SERVER) ? $_SERVER : [];
-        $this->custom = [];
+        $this->_extra = [];
     }
 }
