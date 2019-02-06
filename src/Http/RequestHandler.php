@@ -97,8 +97,8 @@ class RequestHandler
                 if ($numArgs <= 3) return false;
             }
         }
-
-        if (!$h->match($this->_request->server["REQUEST_URI"])) return false;
+        $currPath = \parse_url($this->_request->server["REQUEST_URI"])["path"];
+        if (!$h->match($currPath)) return false;
 
         if ($h->getVerb() !== Router::MIDDLEWARE && $h->getVerb() !== Router::ALL_ROUTE && $h->getVerb() !== $this->_request->server["REQUEST_METHOD"]) return false;
 
@@ -114,7 +114,7 @@ class RequestHandler
 
         if (!$this->_matchCurrentRequestState($now)) return $this->pipeHandlers();
 
-        $now->populatePathParams($this->_request->server["REQUEST_URI"]);
+        $now->populatePathParams(\parse_url($this->_request->server["REQUEST_URI"])["path"]);
 
         $properHandler = $this->_getProperHandler($now);
 
