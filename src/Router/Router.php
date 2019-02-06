@@ -12,7 +12,6 @@ class Router
 {
     private $_handlers;
     private $_basePath;
-    private $_viewEngine;
 
     public const ALL_ROUTE = "ALL_ROUTE";
     public const MIDDLEWARE = "MIDDLEWARE";

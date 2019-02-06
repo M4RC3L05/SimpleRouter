@@ -97,6 +97,7 @@ class RequestHandler
                 if ($numArgs <= 3) return false;
             }
         }
+
         $currPath = \parse_url($this->_request->server["REQUEST_URI"])["path"];
         if (!$h->match($currPath)) return false;
 
