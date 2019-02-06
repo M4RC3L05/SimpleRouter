@@ -1,3 +1,8 @@
+#2.6.0
+
+-   Lazy loading the next request, (only when called \$next, a new request will be looked)
+-   bug fixes
+
 #2.5.1
 
 -   Add method to so that handlers can be register to specifique

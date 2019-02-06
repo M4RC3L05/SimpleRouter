@@ -63,9 +63,6 @@ class RequestHandler
                 return (new $class)->$method($this->_request, $this->_response, $next);
             }
         } else {
-
-
-
             if ($this->_errorOcurr) {
                 return $properHandler($this->_error, $this->_request, $this->_response, $next);
             } else {

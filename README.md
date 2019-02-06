@@ -90,6 +90,12 @@ A simple router for php
         public function registerViewEngine(IViewEngineServiceProvider $engine)
     ```
 
+    -   Gets the router instance
+
+    ```php
+        public function router(): Router
+    ```
+
     -   All the methods from router are also available here
 
 -   Router
@@ -136,10 +142,16 @@ A simple router for php
         public function delete(string $route, ...$handlers) : Router
     ```
 
-    -   Used to match the incomming request
+    -   Used to match the same handler to more than one methods
 
     ```php
-        public function match(string $method, string $path)
+        public function to(array $methods, string $path, ...$handlers) : Router
+    ```
+
+    -   Used to retreave all the request handlers
+
+    ```php
+        public function getHandlers()
     ```
 
 -   Request
@@ -150,7 +162,6 @@ A simple router for php
     -   Files - Store the files sended
     -   Request - Store the request information
     -   Headers - Store de headers of the request
-    -   Method - Store the type of the method
     -   Server - Store server related information
     -   \* - Can set data to any property
 

@@ -20,7 +20,7 @@ class SimpleRouter
         $this->_viewEngine = null;
     }
 
-    public function router()
+    public function router() : Router
     {
         return $this->_router;
     }
