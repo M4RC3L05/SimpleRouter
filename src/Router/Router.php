@@ -71,27 +71,28 @@ class Router
         }, "/"))($this->_handlers);
 
 
-        return reduce(function ($acc, Handler $curr) use ($verb, $path, $pathOnly) {
+        return (new RequestHandler(reverse($finalHandlers), $pathOnly, $this->_viewEngine))->pipeHandlers();
+        // return reduce(function ($acc, Handler $curr) use ($verb, $path, $pathOnly) {
 
-            if (!$curr->match($pathOnly)) return $acc;
+        //     if (!$curr->match($pathOnly)) return $acc;
 
-            if ($curr->getVerb() === Router::MIDDLEWARE || $curr->getVerb() === Router::ALL_ROUTE) {
+        //     if ($curr->getVerb() === Router::MIDDLEWARE || $curr->getVerb() === Router::ALL_ROUTE) {
 
-                $curr->populatePathParams($pathOnly);
+        //         $curr->populatePathParams($pathOnly);
 
-                \array_push($acc, $curr);
+        //         \array_push($acc, $curr);
 
-                return $acc;
-            }
+        //         return $acc;
+        //     }
 
-            if ($curr->getVerb() !== $verb) return $acc;
+        //     if ($curr->getVerb() !== $verb) return $acc;
 
-            $curr->populatePathParams($pathOnly);
+        //     $curr->populatePathParams($pathOnly);
 
-            \array_push($acc, $curr);
+        //     \array_push($acc, $curr);
 
-            return $acc;
-        })([])($finalHandlers);
+        //     return $acc;
+        // })([])($finalHandlers);
     }
 
     public function use() : Router
