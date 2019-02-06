@@ -24,7 +24,10 @@ class RequestHandlerTest extends TestCase
             }, "")
         ];
 
-        $re = new RequestHandler(\array_reverse($handlers), "/");
+        $_SERVER["REQUEST_METHOD"] = "GET";
+        $_SERVER["REQUEST_URI"] = "/";
+
+        $re = new RequestHandler(\array_reverse($handlers));
         \ob_start();
         $re->pipeHandlers();
         $res = \ob_get_clean();
@@ -47,7 +50,10 @@ class RequestHandlerTest extends TestCase
             }, "")
         ];
 
-        $re = new RequestHandler(\array_reverse($handlers), "/");
+        $_SERVER["REQUEST_METHOD"] = "GET";
+        $_SERVER["REQUEST_URI"] = "/";
+
+        $re = new RequestHandler(\array_reverse($handlers));
         \ob_start();
         $re->pipeHandlers();
         $res = \ob_get_clean();

@@ -27,7 +27,9 @@ class SimpleRouter
 
     public function handleRequest()
     {
-        $handlers = $this->_router->match($_SERVER["REQUEST_METHOD"], $_SERVER["REQUEST_URI"]);
+        $_SERVER["REQUEST_URI"] = \parse_url($_SERVER["REQUEST_URI"])["path"];
+        $handlers = $this->_router->getHandlers();
+        return (new RequestHandler(reverse($handlers), $this->_viewEngine))->pipeHandlers();
     }
 
     public function registerViewEngine(IViewEngineServiceProvider $engine)

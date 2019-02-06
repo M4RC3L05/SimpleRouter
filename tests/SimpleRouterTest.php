@@ -150,4 +150,180 @@ class SimpleRouterTest extends TestCase
         $res = \ob_get_clean();
         $this->assertEquals("{\"use\":\"use\",\"\/\":\"\/\"}", $res);
     }
+
+    public function test_it_should_match_on_groups()
+    {
+        $app = new SimpleRouter();
+        $app->group("/", function ($r) {
+            $r->post("/", function ($req, $res) {
+                return $res->sendHtml("aaa");
+            });
+        });
+
+        $_SERVER["REQUEST_METHOD"] = "POST";
+        $_SERVER["REQUEST_URI"] = "/";
+        \ob_start();
+        $app->handleRequest();
+        $res = \ob_get_clean();
+        $this->assertEquals("aaa", $res);
+    }
+
+
+    public function test_should_match_correct_path()
+    {
+        $app = new SimpleRouter();
+        $app->group("/", function ($r) {
+            $r
+                ->use(function ($req, $res, callable $next) {
+                    echo "middleware1";
+                    $next();
+                })
+                ->to(["patch", "delete"], "", function ($req, $res) {
+                    echo "oioioi";
+                })
+                ->get("", function ($req, $res, $next) {
+                    echo "aaaa";
+                    $next();
+                }, function ($req, $res) use (&$tmp) {
+                    echo "get /";
+                })
+                ->post("/", function ($req, $res) {
+                    echo "post /";
+                })
+                ->all("/abc", function ($req, $res) {
+                    echo "alll";
+                })
+                ->delete("/user/:id", function ($req, $res) use (&$tmp) {
+                    \print_r("/user/:id");
+                })
+                ->put("/user/:id/a", function ($req, $res) use (&$tmp) {
+                    \print_r("/user/:id/a");
+                });
+        })
+            ->group(
+                "/b/:aaa",
+                function ($r) {
+                    $r
+                        ->get("/", function ($req, $res) use (&$tmp) {
+                            \print_r("/b/:aaa");
+                        })
+                        ->put("/a", function ($req, $res) use (&$tmp) {
+                            \print_r("/b/:aaa/a");
+                        })
+                        ->group(
+                            "/aa",
+                            function ($r) {
+                                $r
+                                    ->use(function ($req, $res, $next) {
+                                        \print_r("mid for /b/:aaa/aa");
+                                        $next();
+                                    })
+                                    ->get(
+                                        "/:vvv",
+                                        function ($req, $res) use (&$tmp) {
+                                            \print_r("/b/:aaa/aa/:vvv");
+                                        }
+                                    );
+                            }
+
+                        );
+                }
+            )
+            ->get("/throw", function () {
+                throw new \Exception("error");
+            })
+            ->get("/throw-next", function ($req, $res, $next) {
+                $next("next-error");
+            })
+            ->use(function ($req, $res) {
+                return $res->status(404)->sendHTML("not found");
+            })
+            ->use(function ($error, $req, $res, $next) {
+                return $res->status(500)->sendHtml("err: {$error->getMessage()}");
+            });
+
+        $_SERVER["REQUEST_METHOD"] = "GET";
+        $_SERVER["REQUEST_URI"] = "/";
+        \ob_start();
+        $app->handleRequest();
+        $res = \ob_get_clean();
+        $this->assertEquals("middleware1aaaaget /", $res);
+
+        $_SERVER["REQUEST_METHOD"] = "PATCH";
+        $_SERVER["REQUEST_URI"] = "/";
+        \ob_start();
+        $app->handleRequest();
+        $res = \ob_get_clean();
+        $this->assertEquals("middleware1oioioi", $res);
+
+        $_SERVER["REQUEST_METHOD"] = "DELETE";
+        $_SERVER["REQUEST_URI"] = "/";
+        \ob_start();
+        $app->handleRequest();
+        $res = \ob_get_clean();
+        $this->assertEquals("middleware1oioioi", $res);
+
+        $_SERVER["REQUEST_METHOD"] = "DELETE";
+        $_SERVER["REQUEST_URI"] = "/user/12";
+        \ob_start();
+        $app->handleRequest();
+        $res = \ob_get_clean();
+        $this->assertEquals("middleware1/user/:id", $res);
+
+        $_SERVER["REQUEST_METHOD"] = "PUT";
+        $_SERVER["REQUEST_URI"] = "/user/232/a";
+        \ob_start();
+        $app->handleRequest();
+        $res = \ob_get_clean();
+        $this->assertEquals("middleware1/user/:id/a", $res);
+
+        $_SERVER["REQUEST_METHOD"] = "POST";
+        $_SERVER["REQUEST_URI"] = "/abc";
+        \ob_start();
+        $app->handleRequest();
+        $res = \ob_get_clean();
+        $this->assertEquals("middleware1alll", $res);
+
+        $_SERVER["REQUEST_METHOD"] = "GET";
+        $_SERVER["REQUEST_URI"] = "/b/as4";
+        \ob_start();
+        $app->handleRequest();
+        $res = \ob_get_clean();
+        $this->assertEquals("middleware1/b/:aaa", $res);
+
+        $_SERVER["REQUEST_METHOD"] = "PUT";
+        $_SERVER["REQUEST_URI"] = "/b/as4/a";
+        \ob_start();
+        $app->handleRequest();
+        $res = \ob_get_clean();
+        $this->assertEquals("middleware1/b/:aaa/a", $res);
+
+        $_SERVER["REQUEST_METHOD"] = "POST";
+        $_SERVER["REQUEST_URI"] = "/b/sfrhds4g/aa";
+        \ob_start();
+        $app->handleRequest();
+        $res = \ob_get_clean();
+        $this->assertEquals("middleware1mid for /b/:aaa/aanot found", $res);
+
+        $_SERVER["REQUEST_METHOD"] = "GET";
+        $_SERVER["REQUEST_URI"] = "/b/sfrhds4g/aa/vv";
+        \ob_start();
+        $app->handleRequest();
+        $res = \ob_get_clean();
+        $this->assertEquals("middleware1mid for /b/:aaa/aa/b/:aaa/aa/:vvv", $res);
+
+        $_SERVER["REQUEST_METHOD"] = "GET";
+        $_SERVER["REQUEST_URI"] = "/throw";
+        \ob_start();
+        $app->handleRequest();
+        $res = \ob_get_clean();
+        $this->assertEquals("middleware1err: error", $res);
+
+        $_SERVER["REQUEST_METHOD"] = "GET";
+        $_SERVER["REQUEST_URI"] = "/throw-next";
+        \ob_start();
+        $app->handleRequest();
+        $res = \ob_get_clean();
+        $this->assertEquals("middleware1err: next-error", $res);
+    }
 }

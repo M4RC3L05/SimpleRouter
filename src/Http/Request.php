@@ -13,7 +13,6 @@ class Request
     public $request;
     public $cookies;
     public $headers;
-    public $method;
     public $server;
 
 
@@ -26,7 +25,6 @@ class Request
         $this->request = isset($_REQUEST) ? $_REQUEST : [];
         $this->cookies = isset($_COOKIE) ? $_COOKIE : [];
         $this->headers = \function_exists("getallheaders") ? \getallheaders() : [];
-        $this->method = $_SERVER["REQUEST_METHOD"] ?? "";
         $this->server = isset($_SERVER) ? $_SERVER : [];
         $this->_extras = [];
     }

@@ -4,23 +4,21 @@ namespace SimpleRouter\Http;
 
 use SimpleRouter\Router\Handler;
 use SimpleRouter\Views\Interfaces\IViewEngineServiceProvider;
-use function FPPHP\Lists\filter;
+use SimpleRouter\Router\Router;
 
 
 class RequestHandler
 {
     private $_handlers;
-    private $_currPath;
     private $_request;
     private $_response;
     private $_errorOcurr;
     private $_error;
 
-    public function __construct(array $handlers, string $currPath, IViewEngineServiceProvider $viewEngine = null)
+    public function __construct(array $handlers, IViewEngineServiceProvider $viewEngine = null)
     {
 
         $this->_handlers = $handlers;
-        $this->_currPath = $currPath;
         $this->_request = new Request();
         $this->_response = new Response($viewEngine);
         $this->_errorOcurr = false;
@@ -42,7 +40,6 @@ class RequestHandler
 
     private function _dispatch($properHandler)
     {
-
         $next = (function (string $err = null) {
             if (isset($err) && !is_null($err)) {
                 $this->onError(new \Exception($err));
@@ -81,34 +78,9 @@ class RequestHandler
         }
     }
 
-
-    public function pipeHandlers()
+    private function _matchCurrentRequestState(Handler $h)
     {
-
-        if (\count($this->_handlers) <= 0) return;
-
-        $now = array_pop($this->_handlers);
-
-        $properHandler = $this->_getProperHandler($now);
-
-        if (!isset($properHandler) || \is_null($properHandler)) return $this->pipeHandlers();
-
-        if (!$this->_errorOcurr)
-            $this->_request->params = $now->getPathParams();
-
-        try {
-            return $this->_dispatch($properHandler);
-        } catch (\Exception $e) {
-            $this->onError($e);
-            $this->pipeHandlers();
-        }
-    }
-
-    private function onError($error)
-    {
-        if ($this->_errorOcurr) return;
-
-        $this->_handlers = filter(function ($h) {
+        if ($this->_errorOcurr) {
             $properHandler = $this->_getProperHandler($h);
 
             if (!$properHandler) return false;
@@ -124,10 +96,42 @@ class RequestHandler
                 $numArgs = (new \ReflectionFunction(\Closure::fromCallable($properHandler)))->getNumberOfRequiredParameters();
                 if ($numArgs <= 3) return false;
             }
+        }
 
-            return true;
-        })($this->_handlers);
+        if (!$h->match($this->_request->server["REQUEST_URI"])) return false;
 
+        if ($h->getVerb() !== Router::MIDDLEWARE && $h->getVerb() !== Router::ALL_ROUTE && $h->getVerb() !== $this->_request->server["REQUEST_METHOD"]) return false;
+
+        return true;
+    }
+
+
+    public function pipeHandlers()
+    {
+        if (\count($this->_handlers) <= 0) return;
+
+        $now = array_pop($this->_handlers);
+
+        if (!$this->_matchCurrentRequestState($now)) return $this->pipeHandlers();
+
+        $now->populatePathParams($this->_request->server["REQUEST_URI"]);
+
+        $properHandler = $this->_getProperHandler($now);
+
+        if (!isset($properHandler) || \is_null($properHandler)) return $this->pipeHandlers();
+
+        $this->_request->params = $now->getPathParams();
+
+        try {
+            return $this->_dispatch($properHandler);
+        } catch (\Exception $e) {
+            $this->onError($e);
+            $this->pipeHandlers();
+        }
+    }
+
+    private function onError($error)
+    {
         $this->_errorOcurr = true;
         $this->_error = $error;
     }

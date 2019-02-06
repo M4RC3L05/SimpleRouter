@@ -5,19 +5,22 @@ namespace SimpleRouter\Router;
 use function FPPHP\Lists\slice;
 use function FPPHP\Lists\reduce;
 use function FPPHP\Lists\append;
+use SimpleRouter\Http\RequestHandler;
+use function FPPHP\Lists\reverse;
 
 class Router
 {
     private $_handlers;
     private $_basePath;
+    private $_viewEngine;
 
-    private const ALL_ROUTE = "ALL_ROUTE";
-    private const MIDDLEWARE = "MIDDLEWARE";
-    private const GET_ROUTE = "GET";
-    private const POST_ROUTE = "POST";
-    private const PUT_ROUTE = "PUT";
-    private const PATCH_ROUTE = "PATCH";
-    private const DELETE_ROUTE = "DELETE";
+    public const ALL_ROUTE = "ALL_ROUTE";
+    public const MIDDLEWARE = "MIDDLEWARE";
+    public const GET_ROUTE = "GET";
+    public const POST_ROUTE = "POST";
+    public const PUT_ROUTE = "PUT";
+    public const PATCH_ROUTE = "PATCH";
+    public const DELETE_ROUTE = "DELETE";
 
 
     public function __construct()
@@ -56,43 +59,15 @@ class Router
 
     }
 
-    private function _innerMath(string $hostname, string $method, string $path) : array
+    public function getHandlers()
     {
-
-        $verb = \strtoupper($method);
-
-        $pathOnly = \parse_url($path)["path"];
-
         $finalHandlers = append(new Handler(Router::MIDDLEWARE, "/*", function ($error, $req, $res, $next) {
             return $res->status(500)->sendHtml("
             <h1>An error ocurr!</h1>
             <p>{$error}</p>
             ");
         }, "/"))($this->_handlers);
-
-
-        return (new RequestHandler(reverse($finalHandlers), $pathOnly, $this->_viewEngine))->pipeHandlers();
-        // return reduce(function ($acc, Handler $curr) use ($verb, $path, $pathOnly) {
-
-        //     if (!$curr->match($pathOnly)) return $acc;
-
-        //     if ($curr->getVerb() === Router::MIDDLEWARE || $curr->getVerb() === Router::ALL_ROUTE) {
-
-        //         $curr->populatePathParams($pathOnly);
-
-        //         \array_push($acc, $curr);
-
-        //         return $acc;
-        //     }
-
-        //     if ($curr->getVerb() !== $verb) return $acc;
-
-        //     $curr->populatePathParams($pathOnly);
-
-        //     \array_push($acc, $curr);
-
-        //     return $acc;
-        // })([])($finalHandlers);
+        return $finalHandlers;
     }
 
     public function use() : Router
@@ -173,10 +148,5 @@ class Router
         }
 
         return $this;
-    }
-
-    public function match(string $method, string $path) : array
-    {
-        return $this->_innerMath($this->_basePath, $method, $path);
     }
 }
