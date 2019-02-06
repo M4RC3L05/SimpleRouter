@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b71f59a61390c30b3b295d2fa814aa77",
+    "content-hash": "83bd9af967e65d1363790f0deea728a8",
     "packages": [
         {
             "name": "m4rc3l05/fp-php",
