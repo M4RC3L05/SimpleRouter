@@ -3,7 +3,6 @@
 namespace SimpleRouter\Http;
 
 use SimpleRouter\Views\Interfaces\IViewEngineServiceProvider;
-use function FPPHP\Lists\mergeAll;
 
 class Response
 {
@@ -16,13 +15,13 @@ class Response
         $this->_viewEngine = $viewEngine;
     }
 
-    public function status(int $code) : Response
+    public function status(int $code): Response
     {
         \http_response_code($code);
         return $this;
     }
 
-    public function sendFile(string $path, bool $forceDownlod = false) : void
+    public function sendFile(string $path, bool $forceDownlod = false): void
     {
         if (!\file_exists($path)) throw new \Exception("No file found.");
 
@@ -44,27 +43,27 @@ class Response
         return;
     }
 
-    public function redirect(string $to, bool $permanent = true) : void
+    public function redirect(string $to, bool $permanent = true): void
     {
         \header('Location: ' . $to, true, $permanent ? 301 : 302);
         return;
     }
 
-    public function json($data) : void
+    public function json($data): void
     {
         \header('Content-Type: application/json;charset=UTF-8');
         echo \json_encode($data);
         return;
     }
 
-    public function sendString(string $data) : void
+    public function sendString(string $data): void
     {
         \header('Content-Type: plain/text;charset=UTF-8');
         echo $data;
         return;
     }
 
-    public function sendHtml(string $data) : void
+    public function sendHtml(string $data): void
     {
         \header('Content-Type: text/html;charset=UTF-8');
         echo $data;
@@ -80,7 +79,7 @@ class Response
         return $this->sendHtml($this->_viewEngine->renderView($viewName, $this->_withData ?? []));
     }
 
-    public function withHeaders(array $headers) : Response
+    public function withHeaders(array $headers): Response
     {
         foreach ($headers as $key => $value) {
             \header("{$key}:{$value}");
@@ -89,13 +88,13 @@ class Response
         return $this;
     }
 
-    public function withViewData(array $data) : Response
+    public function withViewData(array $data): Response
     {
         $this->_withData = \array_merge(($this->_withData ?? []), $data);
         return $this;
     }
 
-    public function withCookies(array $data) : Response
+    public function withCookies(array $data): Response
     {
         foreach ($data as $key => $cookie) {
             \setcookie($cookie["name"], $cookie["value"] ?? null, $cookie["expires"] ?? null, $cookie["path"] ?? null, $cookie["domain"] ?? null, $cookie["secure"] ?? null, $cookie["httponly"] ?? null);

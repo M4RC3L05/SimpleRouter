@@ -27,7 +27,7 @@ class Handler
         $this->_pathToRegex();
     }
 
-    public function match(string $path) : bool
+    public function match(string $path): bool
     {
         return \preg_match_all($this->_pathRegex, $path);
     }
@@ -53,27 +53,27 @@ class Handler
         $this->_populatedPathParams = zipAssoc($this->_pathParams)($paramData);
     }
 
-    public function getPathParams() : array
+    public function getPathParams(): array
     {
         return $this->_populatedPathParams;
     }
 
-    public function getPath() : string
+    public function getPath(): string
     {
         return $this->_pathOriginal;
     }
 
-    public function getPathRegex() : string
+    public function getPathRegex(): string
     {
         return $this->_pathRegex;
     }
 
-    public function getVerb() : string
+    public function getVerb(): string
     {
         return $this->_verb;
     }
 
-    private function _formatPath(string $path) : string
+    private function _formatPath(string $path): string
     {
         $finalPath = $path;
 
@@ -117,4 +117,3 @@ class Handler
         $this->_populatedPathParams = $this->_pathParams;
     }
 }
-    

@@ -58,7 +58,6 @@ class SimpleRouterTest extends TestCase
         $app->handleRequest();
         $res = \ob_get_clean();
         $this->assertStringStartsWith("customException:err2", \trim(\str_replace(["\r", "\n", " "], "", $res)));
-
     }
 
     public function test_it_should_handle_requests_without_handlers()
@@ -71,7 +70,6 @@ class SimpleRouterTest extends TestCase
 
             $app->handleRequest();
             $this->assertTrue(true);
-
         } catch (\Exception $e) {
             $this->assertTrue(false);
         }
@@ -80,13 +78,14 @@ class SimpleRouterTest extends TestCase
     public function test_it_should_append_the_data_to_the_views()
     {
         $app = new SimpleRouter();
-        $app->registerViewEngine(new class implements IViewEngineServiceProvider
-        {
-            public function renderView(string $viewPath, array $data = [])
+        $app->registerViewEngine(
+            new class implements IViewEngineServiceProvider
             {
-                return \json_encode($data);
+                public function renderView(string $viewPath, array $data = []): string
+                {
+                    return \json_encode($data);
+                }
             }
-        }
         );
 
         $app->router()
@@ -110,13 +109,14 @@ class SimpleRouterTest extends TestCase
     public function test_it_should_allow_to_call_router_methods_directlly_from_SimpleRouter()
     {
         $app = new SimpleRouter();
-        $app->registerViewEngine(new class implements IViewEngineServiceProvider
-        {
-            public function renderView(string $viewPath, array $data = [])
+        $app->registerViewEngine(
+            new class implements IViewEngineServiceProvider
             {
-                return \json_encode($data);
+                public function renderView(string $viewPath, array $data = []): string
+                {
+                    return \json_encode($data);
+                }
             }
-        }
         );
         $app
             ->use(function ($req, $res, $next) {

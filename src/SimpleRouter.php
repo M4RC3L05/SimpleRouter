@@ -12,7 +12,6 @@ class SimpleRouter
 {
     private $_viewEngine;
     private $_router;
-    private $_sessionManager;
 
     public function __construct()
     {
@@ -20,7 +19,7 @@ class SimpleRouter
         $this->_viewEngine = null;
     }
 
-    public function router() : Router
+    public function router(): Router
     {
         return $this->_router;
     }

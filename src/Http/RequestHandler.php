@@ -88,7 +88,6 @@ class RequestHandler
 
                 $numArgs = (new \ReflectionFunction(\Closure::fromCallable([new $class, $method])))->getNumberOfRequiredParameters();
                 if ($numArgs <= 3) return false;
-
             } else {
                 $numArgs = (new \ReflectionFunction(\Closure::fromCallable($properHandler)))->getNumberOfRequiredParameters();
                 if ($numArgs <= 3) return false;

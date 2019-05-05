@@ -56,13 +56,14 @@ class ResponseTest extends TestCase
     public function test_it_should_render_a_view()
     {
         $resMock = $this->getMockBuilder(Response::class)
-            ->setConstructorArgs([new class implements IViewEngineServiceProvider
-            {
-                public function renderView(string $viewPath, array $data = [])
+            ->setConstructorArgs([
+                new class implements IViewEngineServiceProvider
                 {
-                    return "abc";
+                    public function renderView(string $viewPath, array $data = []): string
+                    {
+                        return "abc";
+                    }
                 }
-            }
             ])
             ->setMethodsExcept(["view"])
             ->setMethods(["end"])
@@ -94,4 +95,3 @@ class ResponseTest extends TestCase
         $resMock->sendFile(__DIR__ . "/../files/as.txt");
     }
 }
-

@@ -3,10 +3,7 @@
 namespace SimpleRouter\Router;
 
 use function FPPHP\Lists\slice;
-use function FPPHP\Lists\reduce;
 use function FPPHP\Lists\append;
-use SimpleRouter\Http\RequestHandler;
-use function FPPHP\Lists\reverse;
 
 class Router
 {
@@ -28,7 +25,7 @@ class Router
         $this->_basePath = "/";
     }
 
-    private function _isRouterType(string $type) : bool
+    private function _isRouterType(string $type): bool
     {
         switch ($type) {
             case Router::ALL_ROUTE:
@@ -46,7 +43,7 @@ class Router
         }
     }
 
-    private function _innerRegisterHandlers(string $type, string $path, array $handlers) : void
+    private function _innerRegisterHandlers(string $type, string $path, array $handlers): void
     {
 
         if (!$this->_isRouterType($type)) return;
@@ -55,7 +52,6 @@ class Router
 
             \array_push($this->_handlers, new Handler($type, $path, $handler, $this->_basePath));
         }
-
     }
 
     public function getHandlers()
@@ -69,7 +65,7 @@ class Router
         return $finalHandlers;
     }
 
-    public function use() : Router
+    public function use(): Router
     {
         $args = \func_get_args();
         $path = "/*";
@@ -87,7 +83,7 @@ class Router
         return $this;
     }
 
-    public function group(string $basePath, callable $function) : Router
+    public function group(string $basePath, callable $function): Router
     {
         $tmpPrevBase = $this->_basePath;
 
@@ -103,44 +99,44 @@ class Router
         return $this;
     }
 
-    public function get(string $path, ...$handlers) : Router
+    public function get(string $path, ...$handlers): Router
     {
 
         $this->_innerRegisterHandlers(Router::GET_ROUTE, $path, $handlers);
         return $this;
     }
 
-    public function post(string $path, ...$handlers) : Router
+    public function post(string $path, ...$handlers): Router
     {
         $this->_innerRegisterHandlers(Router::POST_ROUTE, $path, $handlers);
         return $this;
     }
 
-    public function put(string $path, ...$handlers) : Router
+    public function put(string $path, ...$handlers): Router
     {
         $this->_innerRegisterHandlers(Router::PUT_ROUTE, $path, $handlers);
         return $this;
     }
 
-    public function patch(string $path, ...$handlers) : Router
+    public function patch(string $path, ...$handlers): Router
     {
         $this->_innerRegisterHandlers(Router::PATCH_ROUTE, $path, $handlers);
         return $this;
     }
 
-    public function delete(string $path, ...$handlers) : Router
+    public function delete(string $path, ...$handlers): Router
     {
         $this->_innerRegisterHandlers(Router::DELETE_ROUTE, $path, $handlers);
         return $this;
     }
 
-    public function all(string $path, ...$handlers) : Router
+    public function all(string $path, ...$handlers): Router
     {
         $this->_innerRegisterHandlers(Router::ALL_ROUTE, $path, $handlers);
         return $this;
     }
 
-    public function to(array $methods, string $path, ...$handlers) : Router
+    public function to(array $methods, string $path, ...$handlers): Router
     {
         foreach ($methods as $method) {
             $this->_innerRegisterHandlers(\strtoupper($method), $path, $handlers);
