@@ -1,3 +1,7 @@
+#2.6.1
+
+-   code refactors
+
 #2.6.0
 
 -   Lazy loading the next request, (only when called \$next, a new request will be looked)
