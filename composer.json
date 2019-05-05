@@ -4,7 +4,7 @@
     "description": "Simple router for php",
     "require": {
         "php": "^7.1",
-        "m4rc3l05/fp-php": "^0.2.0"
+        "m4rc3l05/fp-php": "^0.3.0"
     },
     "keywords": [
         "php",
@@ -29,6 +29,6 @@
         }
     },
     "require-dev": {
-        "phpunit/phpunit": "~6"
+        "phpunit/phpunit": "~7"
     }
 }
