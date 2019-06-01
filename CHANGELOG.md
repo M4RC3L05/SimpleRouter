@@ -1,3 +1,9 @@
+# 2.6.2
+
+-   code refactor
+-   add methods to handler class
+-   bug fixes
+
 # 2.6.1
 
 -   code refactors
