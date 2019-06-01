@@ -97,7 +97,7 @@ class RequestHandler
         $currPath = \parse_url($this->_request->server["REQUEST_URI"])["path"];
         if (!$h->match($currPath)) return false;
 
-        if ($h->getVerb() !== Router::MIDDLEWARE && $h->getVerb() !== Router::ALL_ROUTE && $h->getVerb() !== $this->_request->server["REQUEST_METHOD"]) return false;
+        if ($h->getVerb() !== Router::MIDDLEWARE && $h->getVerb() !== Router::ALL_ROUTE && $h->getVerb() !== strtoupper($this->_request->server["REQUEST_METHOD"])) return false;
 
         return true;
     }
