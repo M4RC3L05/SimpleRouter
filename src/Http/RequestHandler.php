@@ -25,20 +25,7 @@ class RequestHandler
         $this->_error = null;
     }
 
-    private function _getProperHandler(Handler $handlerWrapper)
-    {
-        $handler = $handlerWrapper->getHandler();
-
-        if (\is_callable($handler)) {
-            return $handler;
-        } else if (\is_array($handler) && \count($handler) === 2) {
-            return $handler;
-        } else {
-            return null;
-        }
-    }
-
-    private function _dispatch($properHandler)
+    private function _dispatch(Handler $handler)
     {
         $next = (function (string $err = null) {
             if (isset($err) && !is_null($err)) {
@@ -49,52 +36,19 @@ class RequestHandler
             }
         });
 
-        if (\is_array($properHandler)) {
-            $class = $properHandler[0];
-            $method = $properHandler[1];
-
-            if ($this->_errorOcurr)
-                return (new $class)->$method($this->_error, $this->_request, $this->_response, $next);
-            else {
-                $numArgs = (new \ReflectionFunction(\Closure::fromCallable([new $class, $method])))->getNumberOfRequiredParameters();
-
-                if ($numArgs > 3) return $next();
-
-                return (new $class)->$method($this->_request, $this->_response, $next);
-            }
-        } else {
-            if ($this->_errorOcurr) {
-                return $properHandler($this->_error, $this->_request, $this->_response, $next);
-            } else {
-                $numArgs = (new \ReflectionFunction(\Closure::fromCallable($properHandler)))->getNumberOfRequiredParameters();
-
-                if ($numArgs > 3) return $next();
-
-                return $properHandler($this->_request, $this->_response, $next);
-            }
-        }
+        return $handler->callHandler($this->_errorOcurr, $this->_error, $this->_request, $this->_response, $next);
     }
 
     private function _matchCurrentRequestState(Handler $h)
     {
-        if ($this->_errorOcurr) {
-            $properHandler = $this->_getProperHandler($h);
+        if ($this->_errorOcurr)
+            if ($h->getNumOfHandlerParams() <= 3) return false;
+            else return true;
 
-            if (!$properHandler) return false;
-
-            if (\is_array($properHandler)) {
-                $class = $properHandler[0];
-                $method = $properHandler[1];
-
-                $numArgs = (new \ReflectionFunction(\Closure::fromCallable([new $class, $method])))->getNumberOfRequiredParameters();
-                if ($numArgs <= 3) return false;
-            } else {
-                $numArgs = (new \ReflectionFunction(\Closure::fromCallable($properHandler)))->getNumberOfRequiredParameters();
-                if ($numArgs <= 3) return false;
-            }
-        }
+        if ($h->getNumOfHandlerParams() > 3) return false;
 
         $currPath = \parse_url($this->_request->server["REQUEST_URI"])["path"];
+
         if (!$h->match($currPath)) return false;
 
         if ($h->getVerb() !== Router::MIDDLEWARE && $h->getVerb() !== Router::ALL_ROUTE && $h->getVerb() !== strtoupper($this->_request->server["REQUEST_METHOD"])) return false;
@@ -113,14 +67,10 @@ class RequestHandler
 
         $now->populatePathParams(\parse_url($this->_request->server["REQUEST_URI"])["path"]);
 
-        $properHandler = $this->_getProperHandler($now);
-
-        if (!isset($properHandler) || \is_null($properHandler)) return $this->pipeHandlers();
-
         $this->_request->params = $now->getPathParams();
 
         try {
-            return $this->_dispatch($properHandler);
+            return $this->_dispatch($now);
         } catch (\Exception $e) {
             $this->onError($e);
             $this->pipeHandlers();

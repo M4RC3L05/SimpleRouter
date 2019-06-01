@@ -5,7 +5,8 @@ namespace SimpleRouter\Router;
 use function FPPHP\Lists\map;
 use function FPPHP\Lists\zipAssoc;
 use function FPPHP\Lists\flatten;
-
+use SimpleRouter\Http\Request;
+use SimpleRouter\Http\Response;
 
 class Handler
 {
@@ -32,9 +33,16 @@ class Handler
         return \preg_match_all($this->_pathRegex, $path);
     }
 
-    public function getHandler()
+    public function getHandler(): callable
     {
-        return $this->_handler;
+        if (\is_array($this->_handler)) {
+            $class = $this->_handler[0];
+            $method = $this->_handler[1];
+
+            return [new $class, $method];
+        } else {
+            return $this->_handler;
+        }
     }
 
     public function populatePathParams(string $path)
@@ -73,6 +81,22 @@ class Handler
         return $this->_verb;
     }
 
+    public function callHandler(bool $hasError, $error, Request $request, Response $response, callable $next)
+    {
+        $properHandler = $this->getHandler();
+
+        if ($hasError) {
+            return $properHandler($error, $request, $response, $next);
+        } else {
+            return $properHandler($request, $response, $next);
+        }
+    }
+
+    public function getNumOfHandlerParams()
+    {
+        return (new \ReflectionFunction(\Closure::fromCallable($this->getHandler())))->getNumberOfRequiredParameters();
+    }
+
     private function _formatPath(string $path): string
     {
         $finalPath = $path;
@@ -103,7 +127,7 @@ class Handler
         }
 
         $matchesToRouteParams = [];
-        $pathParams = \preg_match_all("/\/\:[A-Za-z0-9_]+/", $this->_pathOriginal, $matchesToRouteParams);
+        \preg_match_all("/\/\:[A-Za-z0-9_]+/", $this->_pathOriginal, $matchesToRouteParams);
 
         if (\array_key_exists(0, $matchesToRouteParams) && \count($matchesToRouteParams[0])) {
             $this->_pathParams = map(function ($x) {
