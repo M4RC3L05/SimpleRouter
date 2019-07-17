@@ -24,7 +24,7 @@ class Request
         $this->files = isset($_FILES) ? $_FILES : [];
         $this->request = isset($_REQUEST) ? $_REQUEST : [];
         $this->cookies = isset($_COOKIE) ? $_COOKIE : [];
-        $this->headers = \function_exists("getallheaders") ? \getallheaders() : [];
+        $this->headers = \function_exists("getallheaders") ? getallheaders() : [];
         $this->server = isset($_SERVER) ? $_SERVER : [];
         $this->_extras = [];
     }
