@@ -1,5 +1,5 @@
 {
-    "version": "2.6.2",
+    "version": "2.6.3",
     "name": "m4rc3l05/simplerouter",
     "description": "Simple router for php",
     "require": {

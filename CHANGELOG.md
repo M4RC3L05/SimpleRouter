@@ -1,3 +1,7 @@
+#2.6.3
+
+-   add getallheaders polyfill
+
 # 2.6.2
 
 -   code refactor
